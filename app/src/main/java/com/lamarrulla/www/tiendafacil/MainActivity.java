@@ -1,5 +1,6 @@
 package com.lamarrulla.www.tiendafacil;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.lamarrulla.www.tiendafacil.adapters.MyMenuRecyclerViewAdapter;
 import com.lamarrulla.www.tiendafacil.contents.MenuContent;
 import com.lamarrulla.www.tiendafacil.fragments.AlmacenFragment;
@@ -159,6 +161,8 @@ public class MainActivity extends AppCompatActivity
                 gfm.beginTransaction().replace(R.id.lnlContent, PF, "PrincipalFragment").commit();
                 break;
             case "1":
+                IntentIntegrator integrator = new IntentIntegrator(this);
+                integrator.initiateScan();
                 Fragment AAF = AltaArticuloFragment.newInstance("", "");
                 gfm.beginTransaction().replace(R.id.lnlContent, AAF, "AltaArticuloFragment").addToBackStack("AltaArticuloFragment").commit();
                 break;
