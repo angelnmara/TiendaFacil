@@ -1,10 +1,16 @@
 package com.lamarrulla.www.tiendafacil;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,29 +20,54 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.lamarrulla.www.tiendafacil.adapters.MyMenuRecyclerViewAdapter;
+import com.lamarrulla.www.tiendafacil.contents.MenuContent;
 import com.lamarrulla.www.tiendafacil.fragments.AlmacenFragment;
+import com.lamarrulla.www.tiendafacil.fragments.AltaArticuloFragment;
+import com.lamarrulla.www.tiendafacil.fragments.PrincipalFragment;
 import com.lamarrulla.www.tiendafacil.fragments.TiendaFragment;
 import com.lamarrulla.www.tiendafacil.utils.ViewPagerAdapter;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import static com.lamarrulla.www.tiendafacil.R.id.recyclerView;
 
-    private TabLayout tabPrincipal;
-    private ViewPager viewpager;
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, MyMenuRecyclerViewAdapter.OnListFragmentMenu {
+
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private FragmentManager gfm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        gfm = getSupportFragmentManager();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        viewpager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewpager);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-        tabPrincipal = (TabLayout) findViewById(R.id.tabPrincipal);
-        tabPrincipal.setupWithViewPager(viewpager);
+            /*Toolbar toolbarL = (Toolbar) findViewById(R.id.toolbarL);
+            toolbarL.setTitle("angelnmara@hotmail.com");*/
+
+            CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
+
+            /*final Typeface tfa = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Bold.ttf");*/
+            //final Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Thin.ttf");
+
+            /*collapsingToolbarLayout.setCollapsedTitleTypeface(tfa);*/
+            /*collapsingToolbarLayout.setExpandedTitleTypeface(tf);*/
+
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            recyclerView.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setAdapter(new MyMenuRecyclerViewAdapter(MenuContent.ITEMS, MainActivity.this));
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,13 +86,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
 
-    private void setupViewPager(ViewPager viewpager){
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new TiendaFragment().newInstance("", ""), "TIENDA");
-        adapter.addFragment(new AlmacenFragment().newInstance("", ""), "ALMACEN");
-        viewpager.setAdapter(adapter);
+        PrincipalFragment pf = PrincipalFragment.newInstance("", "");
+        gfm.beginTransaction().replace(R.id.lnlContent, pf, "PrincipalFragment").addToBackStack("PrincipalFragment").commit();
     }
 
     @Override
@@ -102,22 +129,50 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_inicio) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_alta) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_baja) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_salir) {
 
-        } else if (id == R.id.nav_share) {
+        }
+
+        /*else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentM(String id) {
+        switch (id){
+            case "0":
+                limpiaFragments();
+                Fragment PF = PrincipalFragment.newInstance("", "");
+                gfm.beginTransaction().replace(R.id.lnlContent, PF, "PrincipalFragment").commit();
+                break;
+            case "1":
+                Fragment AAF = AltaArticuloFragment.newInstance("", "");
+                gfm.beginTransaction().replace(R.id.lnlContent, AAF, "AltaArticuloFragment").addToBackStack("AltaArticuloFragment").commit();
+                break;
+            default:
+                Toast.makeText(this, "Opcion invalida", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private void limpiaFragments() {
+        for(int i = 0; i < gfm.getBackStackEntryCount(); ++i) {
+            gfm.popBackStack();
+        }
     }
 }
