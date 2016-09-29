@@ -1,14 +1,19 @@
 package com.lamarrulla.www.tiendafacil;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +29,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.lamarrulla.www.tiendafacil.adapters.MyMenuRecyclerViewAdapter;
 import com.lamarrulla.www.tiendafacil.contents.MenuContent;
 import com.lamarrulla.www.tiendafacil.fragments.AlmacenFragment;
@@ -32,11 +38,16 @@ import com.lamarrulla.www.tiendafacil.fragments.PrincipalFragment;
 import com.lamarrulla.www.tiendafacil.fragments.TiendaFragment;
 import com.lamarrulla.www.tiendafacil.utils.ViewPagerAdapter;
 
+import static com.lamarrulla.www.tiendafacil.R.id.decor_content_parent;
+import static com.lamarrulla.www.tiendafacil.R.id.default_activity_button;
 import static com.lamarrulla.www.tiendafacil.R.id.recyclerView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MyMenuRecyclerViewAdapter.OnListFragmentMenu {
+        implements NavigationView.OnNavigationItemSelectedListener, MyMenuRecyclerViewAdapter.OnListFragmentMenu, View.OnClickListener {
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    public static FloatingActionButton fab;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private FragmentManager gfm;
@@ -47,6 +58,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         gfm = getSupportFragmentManager();
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,14 +85,14 @@ public class MainActivity extends AppCompatActivity
             recyclerView.setAdapter(new MyMenuRecyclerViewAdapter(MenuContent.ITEMS, MainActivity.this));
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -91,6 +105,18 @@ public class MainActivity extends AppCompatActivity
 
         PrincipalFragment pf = PrincipalFragment.newInstance("", "");
         gfm.beginTransaction().replace(R.id.lnlContent, pf, "PrincipalFragment").addToBackStack("PrincipalFragment").commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(scanResult != null){
+            if(scanResult.getContents() != null){
+                Fragment AAF = AltaArticuloFragment.newInstance(scanResult.getContents(), "");
+                gfm.beginTransaction().replace(R.id.lnlContent, AAF, "AltaArticuloFragment").addToBackStack("AltaArticuloFragment").commit();
+            }
+        }
     }
 
     @Override
@@ -161,22 +187,51 @@ public class MainActivity extends AppCompatActivity
                 gfm.beginTransaction().replace(R.id.lnlContent, PF, "PrincipalFragment").commit();
                 break;
             case "1":
-                IntentIntegrator integrator = new IntentIntegrator(this);
-                integrator.initiateScan();
-                Fragment AAF = AltaArticuloFragment.newInstance("", "");
-                gfm.beginTransaction().replace(R.id.lnlContent, AAF, "AltaArticuloFragment").addToBackStack("AltaArticuloFragment").commit();
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this, "No existe permiso", Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+                }else {
+                    lanzaCamara();
+                }
                 break;
             default:
-                Toast.makeText(this, "Opcion invalida", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.opcionInvalida), Toast.LENGTH_SHORT).show();
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
 
+    private void lanzaCamara() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.initiateScan();
+    }
+
     private void limpiaFragments() {
         for(int i = 0; i < gfm.getBackStackEntryCount(); ++i) {
             gfm.popBackStack();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.fab:
+                switch (fab.getDrawable().getLevel()){
+                    case R.drawable.ic_menu_camera:
+                        Toast.makeText(this, "camara", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if(takePictureIntent.resolveActivity(this.getPackageManager()) != null){
+                            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                        }
+                        break;
+                }
+                break;
+            default:
+                Toast.makeText(this, getResources().getString(R.string.opcionInvalida), Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 }

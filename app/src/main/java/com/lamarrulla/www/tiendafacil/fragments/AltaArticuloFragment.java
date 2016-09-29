@@ -1,14 +1,22 @@
 package com.lamarrulla.www.tiendafacil.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.lamarrulla.www.tiendafacil.MainActivity;
 import com.lamarrulla.www.tiendafacil.R;
+import com.lamarrulla.www.tiendafacil.utils.ViewPagerAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,15 +26,22 @@ import com.lamarrulla.www.tiendafacil.R;
  * Use the {@link AltaArticuloFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AltaArticuloFragment extends Fragment {
+public class AltaArticuloFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    // Objetos
+
+    private EditText txtCodigo;
+    private ImageView ImgProducto;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -64,8 +79,32 @@ public class AltaArticuloFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View v = inflater.inflate(R.layout.fragment_alta_articulo, container, false);
+
+        txtCodigo = (EditText) v.findViewById(R.id.txtCodigo);
+        ImgProducto = (ImageView) v.findViewById(R.id.ImgProducto);
+
+        txtCodigo.setText(mParam1);
+        MainActivity.fab.setImageResource(R.drawable.ic_menu_camera);
+        ImgProducto.setOnClickListener(this);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_alta_articulo, container, false);
+        return v;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ImgProducto:
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(takePictureIntent.resolveActivity(getContext().getPackageManager()) != null){
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            break;
+            default:
+                Toast.makeText(getContext(), "Opcion invalida", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     /*// TODO: Rename method, update argument and hook method into UI event
