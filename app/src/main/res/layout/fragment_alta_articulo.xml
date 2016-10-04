@@ -21,6 +21,8 @@
             <EditText android:hint="Codigo"
                       android:id="@+id/txtCodigo"
                       android:layout_width="match_parent"
+                      android:maxLines="1"
+                      android:maxLength="100"
                       android:layout_height="wrap_content"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -30,6 +32,20 @@
                                                        android:id="@+id/textinputNombre">
             <EditText android:hint="Nombre"
                       android:id="@+id/txtNombre"
+                      android:maxLines="1"
+                      android:maxLength="50"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+                                                       android:layout_height="wrap_content"
+                                                       android:id="@+id/textinputDescripcion">
+            <EditText android:hint="Descripcion"
+                      android:id="@+id/txtDescripcion"
+                      android:maxLines="1"
+                      android:maxLength="50"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>
 
@@ -40,7 +56,10 @@
                                                        android:id="@+id/textinputPrecio">
             <EditText android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:hint="Precio"/>
+                      android:id="@+id/txtPrecio"
+                      android:hint="Precio"
+                      android:inputType="numberDecimal"
+                      android:maxLines="1"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
@@ -49,7 +68,10 @@
 
             <EditText android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:hint="Costo"/>
+                      android:id="@+id/txtCosto"
+                      android:hint="Costo"
+                      android:inputType="numberDecimal"
+                      android:maxLines="1"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -58,8 +80,10 @@
                                                        android:id="@+id/textinputUnidades">
             <EditText android:layout_width="match_parent"
                       android:layout_height="wrap_content"
+                      android:id="@+id/txtUnidades"
                       android:hint="Unidades"
-                      android:inputType="number"/>
+                      android:inputType="number"
+                      android:maxLines="1"/>
 
         </android.support.design.widget.TextInputLayout>
 

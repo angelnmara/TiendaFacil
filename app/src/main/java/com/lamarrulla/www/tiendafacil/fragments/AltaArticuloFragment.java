@@ -1,5 +1,7 @@
 package com.lamarrulla.www.tiendafacil.fragments;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,9 @@ import android.widget.Toast;
 
 import com.lamarrulla.www.tiendafacil.MainActivity;
 import com.lamarrulla.www.tiendafacil.R;
+import com.lamarrulla.www.tiendafacil.dialogs.GenericDilog;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilDatabase;
 import com.lamarrulla.www.tiendafacil.utils.ViewPagerAdapter;
 
 /**
@@ -41,7 +47,13 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
     // Objetos
 
     private EditText txtCodigo;
+    private EditText txtNombre;
+    private EditText txtDescripcion;
+    private EditText txtPrecio;
+    private EditText txtCosto;
+    private EditText txtUnidades;
     private ImageView ImgProducto;
+    private CardView btn_accept;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -83,9 +95,19 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         View v = inflater.inflate(R.layout.fragment_alta_articulo, container, false);
 
         txtCodigo = (EditText) v.findViewById(R.id.txtCodigo);
+        txtNombre = (EditText) v.findViewById(R.id.txtNombre);
+        txtDescripcion = (EditText) v.findViewById(R.id.txtDescripcion);
+        txtPrecio = (EditText) v.findViewById(R.id.txtPrecio);
+        txtCosto = (EditText) v.findViewById(R.id.txtCosto);
+        txtUnidades = (EditText) v.findViewById(R.id.txtUnidades);
+
         ImgProducto = (ImageView) v.findViewById(R.id.ImgProducto);
 
+        btn_accept = (CardView) v.findViewById(R.id.btn_accept);
+        btn_accept.setOnClickListener(this);
+
         txtCodigo.setText(mParam1);
+
         MainActivity.fab.setImageResource(R.drawable.ic_menu_camera);
         ImgProducto.setOnClickListener(this);
         // Inflate the layout for this fragment
@@ -101,10 +123,32 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
                     startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
             break;
+            case R.id.btn_accept:
+                saveArticle();
+                break;
             default:
                 Toast.makeText(getContext(), "Opcion invalida", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    private void saveArticle() {
+        final ContentResolver resolver = getContext().getContentResolver();
+        final ContentValues values = new ContentValues();
+
+        values.put(TiendaFacilContract.article.ARTICLE_DESC, txtDescripcion.getText().toString());
+        values.put(TiendaFacilContract.article.ARTICLE_NAME, txtNombre.getText().toString());
+        values.put(TiendaFacilContract.article.ARTICLE_PRECIO, txtPrecio.getText().toString());
+        values.put(TiendaFacilContract.article.ARTICLE_COSTO, txtCosto.getText().toString());
+        values.put(TiendaFacilContract.article.ARTICLE_STOCK, txtUnidades.getText().toString());
+
+        final Uri newUri = resolver.insert(TiendaFacilContract.article.CONTENT_URI, values);
+
+        Intent i = new Intent(getContext(), GenericDilog.class);
+        i.putExtra("message", TiendaFacilContract.article.getArticleId(newUri).toString());
+        startActivity(i);
+        return;
+
     }
 
     /*// TODO: Rename method, update argument and hook method into UI event
