@@ -30,6 +30,10 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login">
         </activity>
+        <activity
+            android:name=".dialogs.GenericDilog"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <provider android:authorities="com.lamarrulla.www.tiendafacil.provider"
                   android:name=".provider.TiendaFacilProvider"
                   android:exported="false"/>

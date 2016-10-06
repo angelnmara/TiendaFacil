@@ -145,7 +145,8 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         final Uri newUri = resolver.insert(TiendaFacilContract.article.CONTENT_URI, values);
 
         Intent i = new Intent(getContext(), GenericDilog.class);
-        i.putExtra("message", TiendaFacilContract.article.getArticleId(newUri).toString());
+        String article = TiendaFacilContract.article.getArticleId(newUri).toString();
+        i.putExtra("message", article);
         startActivity(i);
         return;
 
