@@ -104,7 +104,7 @@ public final class TiendaFacilContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_ARTICLE).build();
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.ARTICLE;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.ARTICLE;
-        public static final String DEFAULT_SORT = ArticleColumns._ID + "COLLATE NOCASE ASC";
+        public static final String DEFAULT_SORT = ArticleColumns.ARTICLE_ID + " COLLATE NOCASE ASC";
 
         public static Uri buildArticleUri(String ArticleId){
             return CONTENT_URI.buildUpon().appendPath(_ID).build();
