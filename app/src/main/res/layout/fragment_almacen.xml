@@ -1,13 +1,28 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.lamarrulla.www.tiendafacil.fragments.AlmacenFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              tools:context="com.lamarrulla.www.tiendafacil.fragments.AlmacenFragment"
+              android:orientation="vertical">
+
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+    <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:id="@+id/textinputBuscar">
+        <EditText android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/txtUnidades"
+                  android:hint="Buscar producto"
+                  android:inputType="text"
+                  android:maxLines="1"/>
 
-</FrameLayout>
+    </android.support.design.widget.TextInputLayout>
+
+    <FrameLayout android:id="@+id/flyListaProducto"
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent">
+    </FrameLayout>
+
+</LinearLayout>
