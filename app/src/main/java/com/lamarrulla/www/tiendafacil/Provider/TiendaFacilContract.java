@@ -76,6 +76,7 @@ public final class TiendaFacilContract {
 
     interface ArticleColumns extends BaseColumns{
         public static final String ARTICLE_ID = "article_id";
+        public static final String ARTICLE_CODE = "article_code";
         public static final String ARTICLE_NAME = "article_name";
         public static final String ARTICLE_DESC = "article_desc";
         public static final String ARTICLE_PRECIO = "article_precio";

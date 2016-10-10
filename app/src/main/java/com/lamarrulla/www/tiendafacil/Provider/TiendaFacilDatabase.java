@@ -17,7 +17,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "TiendaFacilDB";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 7;
 
     static SQLiteDatabase dbUse;
 
@@ -57,12 +57,14 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
             Log.d(TAG, "Elimina");
 
             db.beginTransaction();
-            db.delete(Tables.USER, null, null);
+            //db.delete(Tables.USER, null, null);
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.USER);
             db.setTransactionSuccessful();
             db.endTransaction();
 
             db.beginTransaction();
-            db.delete(Tables.ARTICLE, null, null);
+            //db.delete(Tables.ARTICLE, null, null);
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.ARTICLE);
             db.setTransactionSuccessful();
             db.endTransaction();
 
@@ -72,6 +74,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
     }
 
     private static void createTables(SQLiteDatabase db){
+
         final StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("CREATE TABLE IF NOT EXISTS ").append(Tables.USER)
                 .append("(").append(UserColumns._ID)
@@ -107,6 +110,8 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
                 .append(Tables.ARTICLE).append("(")
                 .append(ArticleColumns.ARTICLE_ID)
                 .append(" INTEGER PRIMARY KEY AUTOINCREMENT,")
+                .append(ArticleColumns.ARTICLE_CODE)
+                .append(" TEXT COLLATE NOCASE,")
                 .append(ArticleColumns.ARTICLE_NAME)
                 .append(" TEXT COLLATE NOCASE,")
                 .append(ArticleColumns.ARTICLE_DESC)
@@ -116,7 +121,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
                 .append(ArticleColumns.ARTICLE_COSTO)
                 .append(" INTEGER,")
                 .append(ArticleColumns.ARTICLE_FOTO)
-                .append(" TEXT COLLATE NOCASE,")
+                .append(" BLOB,")
                 .append(ArticleColumns.ARTICLE_STOCK)
                 .append(" TEXT COLLATE NOCASE)");
 

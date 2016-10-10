@@ -1,9 +1,12 @@
-package com.lamarrulla.www.tiendafacil.fragments;
+    package com.lamarrulla.www.tiendafacil.fragments;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lamarrulla.www.tiendafacil.MainActivity;
@@ -24,7 +28,13 @@ import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilDatabase;
 import com.lamarrulla.www.tiendafacil.utils.ViewPagerAdapter;
 
-/**
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.article;
+
+import org.w3c.dom.Text;
+
+import java.security.PrivateKey;
+
+    /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * {@link AltaArticuloFragment.OnFragmentInteractionListener} interface
@@ -39,10 +49,13 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
     private static final String ARG_PARAM2 = "param2";
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    public static ImageView ImgProducto;
+    public static byte[] ImgProductoByte;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private boolean codigoExiste;
 
     // Objetos
 
@@ -52,8 +65,9 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
     private EditText txtPrecio;
     private EditText txtCosto;
     private EditText txtUnidades;
-    private ImageView ImgProducto;
+    //private ImageView ImgProducto;
     private CardView btn_accept;
+        private TextView txtBtnAcept;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -100,18 +114,47 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         txtPrecio = (EditText) v.findViewById(R.id.txtPrecio);
         txtCosto = (EditText) v.findViewById(R.id.txtCosto);
         txtUnidades = (EditText) v.findViewById(R.id.txtUnidades);
+        txtBtnAcept = (TextView) v.findViewById(R.id.txtBtnAcept);
 
         ImgProducto = (ImageView) v.findViewById(R.id.ImgProducto);
 
         btn_accept = (CardView) v.findViewById(R.id.btn_accept);
         btn_accept.setOnClickListener(this);
 
-        txtCodigo.setText(mParam1);
-
+        String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
+        String selection = "article_code = ?";
+        String[] selectionArgs = new String[] {mParam1};
+        Cursor articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
         MainActivity.fab.setImageResource(R.drawable.ic_menu_camera);
         ImgProducto.setOnClickListener(this);
+
+        if(articulosCursor.getCount()>0){
+            codigoExiste = true;
+            llenaPantalla(articulosCursor);
+        }
+
+        txtCodigo.setText(mParam1);
+
         // Inflate the layout for this fragment
         return v;
+    }
+
+    private void llenaPantalla(Cursor articulosCursor) {
+        if(articulosCursor.moveToFirst()){
+            do{
+                txtNombre.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_name")));
+                txtUnidades.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_stock")));
+                txtCosto.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_costo")));
+                txtDescripcion.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_desc")));
+                txtPrecio.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_precio")));
+                byte[] btm = articulosCursor.getBlob(articulosCursor.getColumnIndex("article_foto"));
+                if (btm != null){
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(btm, 0, btm.length);
+                    ImgProducto.setImageBitmap(bitmap);
+                }
+                txtBtnAcept.setText(getResources().getString(R.string.edit));
+            }while (articulosCursor.moveToNext());
+        }
     }
 
     @Override
@@ -124,7 +167,11 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
                 }
             break;
             case R.id.btn_accept:
-                saveArticle();
+                if(codigoExiste){
+                    editArticle();
+                }else{
+                    saveArticle();
+                }
                 break;
             default:
                 Toast.makeText(getContext(), "Opcion invalida", Toast.LENGTH_SHORT).show();
@@ -132,23 +179,71 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private void saveArticle() {
-        final ContentResolver resolver = getContext().getContentResolver();
-        final ContentValues values = new ContentValues();
+        private void editArticle() {
 
-        values.put(TiendaFacilContract.article.ARTICLE_DESC, txtDescripcion.getText().toString());
-        values.put(TiendaFacilContract.article.ARTICLE_NAME, txtNombre.getText().toString());
-        values.put(TiendaFacilContract.article.ARTICLE_PRECIO, txtPrecio.getText().toString());
-        values.put(TiendaFacilContract.article.ARTICLE_COSTO, txtCosto.getText().toString());
-        values.put(TiendaFacilContract.article.ARTICLE_STOCK, txtUnidades.getText().toString());
+            try{
+                final ContentResolver resolver = getContext().getContentResolver();
+                final ContentValues values = new ContentValues();
 
-        final Uri newUri = resolver.insert(TiendaFacilContract.article.CONTENT_URI, values);
+                values.put(article.ARTICLE_DESC, txtDescripcion.getText().toString());
+                values.put(article.ARTICLE_NAME, txtNombre.getText().toString());
+                values.put(article.ARTICLE_PRECIO, txtPrecio.getText().toString());
+                values.put(article.ARTICLE_COSTO, txtCosto.getText().toString());
+                values.put(article.ARTICLE_STOCK, txtUnidades.getText().toString());
+                values.put(article.ARTICLE_FOTO, ImgProductoByte);
 
-        Intent i = new Intent(getContext(), GenericDilog.class);
-        String article = TiendaFacilContract.article.getArticleId(newUri).toString();
-        i.putExtra("message", article);
-        startActivity(i);
-        return;
+                String selection = "article_code = ?";
+                String[] selectionArgs = new String[] {mParam1};
+
+                Integer actualizados = resolver.update(TiendaFacilContract.article.CONTENT_URI, values, selection, selectionArgs);
+
+                if(actualizados > 0){
+                    Intent i = new Intent(getContext(), GenericDilog.class);
+                    i.putExtra("isOk", true);
+                    i.putExtra("message", "Se actualizo exitosamente " + actualizados + " regisro");
+                    startActivity(i);
+                }else{
+                    Intent i = new Intent(getContext(), GenericDilog.class);
+                    i.putExtra("message", "Existio un error al actualizar los registros");
+                    startActivity(i);
+                }
+            } catch (Exception ex){
+                Intent i = new Intent(getContext(), GenericDilog.class);
+                i.putExtra("message", "Existio un error al actualizar los registros:" + ex.getMessage());
+                startActivity(i);
+            }
+
+        }
+
+        private void saveArticle() {
+
+        try{
+            final ContentResolver resolver = getContext().getContentResolver();
+            final ContentValues values = new ContentValues();
+
+            values.put(article.ARTICLE_CODE, mParam1);
+            values.put(article.ARTICLE_DESC, txtDescripcion.getText().toString());
+            values.put(article.ARTICLE_NAME, txtNombre.getText().toString());
+            values.put(article.ARTICLE_PRECIO, txtPrecio.getText().toString());
+            values.put(article.ARTICLE_COSTO, txtCosto.getText().toString());
+            values.put(article.ARTICLE_STOCK, txtUnidades.getText().toString());
+            values.put(article.ARTICLE_FOTO, ImgProductoByte);
+
+            final Uri newUri = resolver.insert(TiendaFacilContract.article.CONTENT_URI, values);
+
+            Intent i = new Intent(getContext(), GenericDilog.class);
+            String article = TiendaFacilContract.article.getArticleId(newUri).toString();
+            i.putExtra("isOk", true);
+            i.putExtra("message", "El registro se inserto correctamente con el id: " + article);
+            startActivity(i);
+
+            return;
+
+        }catch (Exception ex){
+            Intent i = new Intent(getContext(), GenericDilog.class);
+            i.putExtra("message", "Existio un error al insertar el articulo");
+            startActivity(i);
+        }
 
     }
 

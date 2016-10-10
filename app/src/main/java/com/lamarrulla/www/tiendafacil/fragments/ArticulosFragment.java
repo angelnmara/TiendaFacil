@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.lamarrulla.www.tiendafacil.R;
-import com.lamarrulla.www.tiendafacil.fragments.dummy.genericContentJSON;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 import com.lamarrulla.www.tiendafacil.contents.genericContentCursor;
 
@@ -71,11 +70,11 @@ public class ArticulosFragment extends Fragment implements MyArticulosRecyclerVi
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio" };
+            String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
             Cursor ArticulosCursor =  getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, null, null, null);
             //genericContentJSON.getData();
             genericContentCursor.getData(ArticulosCursor, "itemListArticle");
-            if (genericContentJSON.Item != null){
+            if (genericContentCursor.Item != null){
                 recyclerView.setAdapter(new MyArticulosRecyclerViewAdapter(genericContentCursor.Item, ArticulosFragment.this));
             }
         }

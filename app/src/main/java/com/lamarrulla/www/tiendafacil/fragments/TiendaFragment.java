@@ -1,14 +1,23 @@
 package com.lamarrulla.www.tiendafacil.fragments;
 
 import android.content.Context;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.lamarrulla.www.tiendafacil.R;
+
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,15 +27,22 @@ import com.lamarrulla.www.tiendafacil.R;
  * Use the {@link TiendaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TiendaFragment extends Fragment {
+public class TiendaFragment extends Fragment implements View.OnClickListener, SurfaceHolder.Callback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "TiendaFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private SurfaceView SvFoto;
+    private SurfaceHolder surfaceHolder;
+    private CardView btn_accept;
+
+    Camera camera;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -65,45 +81,62 @@ public class TiendaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tienda, container, false);
+        View v = inflater.inflate(R.layout.fragment_tienda, container, false);
+        SvFoto = (SurfaceView) v.findViewById(R.id.SvFoto);
+        surfaceHolder = SvFoto.getHolder();
+        surfaceHolder.addCallback(this);
+        btn_accept = (CardView) v.findViewById(R.id.btn_accept);
+        btn_accept.setOnClickListener(this);
+        return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    /*public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.btn_accept:
+                    start_camera();
+                break;
+            default:
+                Toast.makeText(getContext(), getResources().getString(R.string.opcionInvalida), Toast.LENGTH_SHORT).show();
+                break;
         }
-    }*/
+    }
 
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    private void start_camera() {
+        try {
+            camera = Camera.open();
+        }catch (RuntimeException ex){
+            Log.e(TAG, "init_camera: " + ex);
+            return;
         }
-    }*/
+        Camera.Parameters param;
+        param = camera.getParameters();
+        param.setPreviewFrameRate(20);
+        param.setPreviewSize(176,144);
+        camera.setDisplayOrientation(90);
+        camera.setParameters(param);
+        try {
+            camera.setPreviewDisplay(surfaceHolder);
+            camera.startPreview();
+        } catch (IOException e) {
+            Log.e(TAG, "init_camera: " + e);
+            return;
+        }
+    }
 
-    /*@Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    /*public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }*/
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
+    }
+
 }

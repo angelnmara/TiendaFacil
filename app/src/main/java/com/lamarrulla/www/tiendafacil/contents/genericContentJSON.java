@@ -1,4 +1,4 @@
-package com.lamarrulla.www.tiendafacil.fragments.dummy;
+package com.lamarrulla.www.tiendafacil.contents;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -35,7 +35,11 @@ public class genericContentJSON {
 
             switch (lista){
                 case "itemListArticle":
-                    Item.add(new itemListArticle(jso.getInt("article_id"), jso.getString("article_name"), jso.getString("article_desc"), jso.getDouble("article_precio"), jso.getDouble("article_costo"), jso.getInt("article_foto"), jso.getInt("article_stock")));
+                    /*Item.add(new itemListArticle(jso.getInt("article_id"),
+                            jso.getString("article_name"), jso.getString("article_desc"), jso.getDouble("article_precio"),
+                            jso.getDouble("article_costo"),
+                            jso.getString("article_foto"),
+                            jso.getInt("article_stock")));*/
                     break;
                 default:
                     break;

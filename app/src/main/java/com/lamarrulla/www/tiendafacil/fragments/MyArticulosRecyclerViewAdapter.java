@@ -1,14 +1,17 @@
 package com.lamarrulla.www.tiendafacil.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lamarrulla.www.tiendafacil.R;
 /*import com.lamarrulla.www.tiendafacil.fragments.ArticulosFragment.OnListFragmentInteractionListener;*/
-//import com.lamarrulla.www.tiendafacil.fragments.dummy.genericContentJSON.DummyItem;
+//import com.lamarrulla.www.tiendafacil.contents.genericContentJSON.DummyItem;
 import com.lamarrulla.www.tiendafacil.listas.itemListArticle;
 
 import java.util.List;
@@ -40,6 +43,11 @@ public class MyArticulosRecyclerViewAdapter extends RecyclerView.Adapter<MyArtic
         //holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getArticle_id().toString());
         holder.mContentView.setText(mValues.get(position).getArticle_desc());
+        byte[] btm = mValues.get(position).getArticle_foto();
+        if (btm != null){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(btm, 0, btm.length);
+            holder.ImgArticulos.setImageBitmap(bitmap);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +74,7 @@ public class MyArticulosRecyclerViewAdapter extends RecyclerView.Adapter<MyArtic
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
+        public final ImageView ImgArticulos;
         //public DummyItem mItem;
 
         public ViewHolder(View view) {
@@ -73,6 +82,7 @@ public class MyArticulosRecyclerViewAdapter extends RecyclerView.Adapter<MyArtic
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+            ImgArticulos = (ImageView) view.findViewById(R.id.ImgArticulos);
         }
 
         @Override

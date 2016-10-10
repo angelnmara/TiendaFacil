@@ -26,7 +26,7 @@ public class genericContentCursor {
                                 cursor.getString(cursor.getColumnIndex("article_desc")),
                                 cursor.getDouble(cursor.getColumnIndex("article_precio")),
                                 cursor.getDouble(cursor.getColumnIndex("article_costo")),
-                                cursor.getInt(cursor.getColumnIndex("article_foto")),
+                                cursor.getBlob(cursor.getColumnIndex("article_foto")),
                                 cursor.getInt(cursor.getColumnIndex("article_stock"))));
                         break;
                     default:

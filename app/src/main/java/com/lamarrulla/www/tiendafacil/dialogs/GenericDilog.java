@@ -15,8 +15,8 @@ import com.lamarrulla.www.tiendafacil.R;
 //import com.lamarrulla.www.tiendafacil.preference.UserAccount;
 
 public class GenericDilog extends Activity implements View.OnClickListener {
-    boolean isOK = false;
-    boolean isOKLogin = false;
+    boolean isOk = false;
+    boolean isOkLogin = false;
 
 
     @Override
@@ -43,13 +43,13 @@ public class GenericDilog extends Activity implements View.OnClickListener {
 
         if (extras != null) {
             message = extras.getString("message");
-            isOK=extras.getBoolean("isOk");
-            isOKLogin=extras.getBoolean("isOkLogin");
+            isOk=extras.getBoolean("isOk");
+            isOkLogin=extras.getBoolean("isOkLogin");
 
         }
 
 
-        if (isOK || isOKLogin){
+        if (isOk || isOkLogin){
             iconDialog.setImageResource(R.drawable.ic_ok_dialog);
             btnAgree.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
         }
@@ -66,13 +66,13 @@ public class GenericDilog extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_agree:
 
-                if (isOK){
+                if (isOk){
                     Intent i = new Intent(this, MainActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(i);
                     overridePendingTransition(R.anim.top_in, R.anim.top_out);
 
-                }else if(isOKLogin){
+                }else if(isOkLogin){
 
                     /*UserAccount userAccount;
 

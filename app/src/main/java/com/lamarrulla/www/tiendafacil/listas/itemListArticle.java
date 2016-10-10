@@ -1,5 +1,7 @@
 package com.lamarrulla.www.tiendafacil.listas;
 
+import java.sql.Blob;
+
 /**
  * Created by Qualtop on 06/10/2016.
  */
@@ -10,10 +12,10 @@ public class itemListArticle {
     String article_desc;
     Double article_precio;
     Double article_costo;
-    Integer article_foto;
+    byte[] article_foto;
     Integer article_stock;
 
-    public itemListArticle(Integer article_id, String article_name, String article_desc, Double article_precio, Double article_costo, Integer article_foto, Integer article_stock){
+    public itemListArticle(Integer article_id, String article_name, String article_desc, Double article_precio, Double article_costo, byte[] article_foto, Integer article_stock){
         this.article_id = article_id;
         this.article_name = article_name;
         this.article_desc = article_desc;
@@ -63,11 +65,11 @@ public class itemListArticle {
         this.article_costo = article_costo;
     }
 
-    public Integer getArticle_foto() {
+    public byte[] getArticle_foto() {
         return article_foto;
     }
 
-    public void setArticle_foto(Integer article_foto) {
+    public void setArticle_foto(byte[] article_foto) {
         this.article_foto = article_foto;
     }
 

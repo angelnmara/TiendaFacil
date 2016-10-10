@@ -1,20 +1,19 @@
 package com.lamarrulla.www.tiendafacil;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -32,15 +31,9 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.lamarrulla.www.tiendafacil.adapters.MyMenuRecyclerViewAdapter;
 import com.lamarrulla.www.tiendafacil.contents.MenuContent;
-import com.lamarrulla.www.tiendafacil.fragments.AlmacenFragment;
 import com.lamarrulla.www.tiendafacil.fragments.AltaArticuloFragment;
 import com.lamarrulla.www.tiendafacil.fragments.PrincipalFragment;
-import com.lamarrulla.www.tiendafacil.fragments.TiendaFragment;
-import com.lamarrulla.www.tiendafacil.utils.ViewPagerAdapter;
-
-import static com.lamarrulla.www.tiendafacil.R.id.decor_content_parent;
-import static com.lamarrulla.www.tiendafacil.R.id.default_activity_button;
-import static com.lamarrulla.www.tiendafacil.R.id.recyclerView;
+import com.lamarrulla.www.tiendafacil.utils.getBitmap;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MyMenuRecyclerViewAdapter.OnListFragmentMenu, View.OnClickListener {
@@ -116,6 +109,12 @@ public class MainActivity extends AppCompatActivity
                 Fragment AAF = AltaArticuloFragment.newInstance(scanResult.getContents(), "");
                 gfm.beginTransaction().replace(R.id.lnlContent, AAF, "AltaArticuloFragment").addToBackStack("AltaArticuloFragment").commit();
             }
+        }
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK){
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            AltaArticuloFragment.ImgProducto.setImageBitmap(imageBitmap);
+            AltaArticuloFragment.ImgProductoByte = getBitmap.getBitmapAsByteArray(imageBitmap);
         }
     }
 

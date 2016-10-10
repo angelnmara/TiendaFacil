@@ -13,7 +13,8 @@
         <ImageView android:layout_width="100dp"
                    android:layout_height="100dp"
                    android:src="@drawable/logo_splash"
-                   android:id="@+id/ImgProducto"/>
+                   android:id="@+id/ImgProducto"
+                   android:layout_margin="10dp"/>
 
         <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
@@ -96,6 +97,7 @@
 
             <TextView
                 style="@style/TextViexCard"
+                android:id="@+id/txtBtnAcept"
                 android:text="@string/alta"/>
 
         </android.support.v7.widget.CardView>
