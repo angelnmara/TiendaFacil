@@ -121,12 +121,13 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         btn_accept = (CardView) v.findViewById(R.id.btn_accept);
         btn_accept.setOnClickListener(this);
 
+        MainActivity.fab.setImageResource(R.drawable.ic_menu_camera);
+        ImgProducto.setOnClickListener(this);
+
         String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
         String selection = "article_code = ?";
         String[] selectionArgs = new String[] {mParam1};
         Cursor articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
-        MainActivity.fab.setImageResource(R.drawable.ic_menu_camera);
-        ImgProducto.setOnClickListener(this);
 
         if(articulosCursor.getCount()>0){
             codigoExiste = true;

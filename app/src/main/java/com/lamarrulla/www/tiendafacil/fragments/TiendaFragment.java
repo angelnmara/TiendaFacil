@@ -1,11 +1,19 @@
 package com.lamarrulla.www.tiendafacil.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -15,9 +23,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.zxing.ResultPoint;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.lamarrulla.www.tiendafacil.R;
+import com.lamarrulla.www.tiendafacil.listas.itemListArticle;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.lamarrulla.www.tiendafacil.R.id.recyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,20 +46,22 @@ import java.io.IOException;
  * Use the {@link TiendaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TiendaFragment extends Fragment implements View.OnClickListener, SurfaceHolder.Callback {
+public class TiendaFragment extends Fragment implements View.OnClickListener, MyArticulosRecyclerViewAdapter.OnListFragmentInteractionListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = "TiendaFragment";
 
+    public static ArrayList Item;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    private SurfaceView SvFoto;
-    private SurfaceHolder surfaceHolder;
+    private CompoundBarcodeView bcv;
     private CardView btn_accept;
+    private RecyclerView list;
 
     Camera camera;
 
@@ -82,19 +103,81 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, Su
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_tienda, container, false);
-        SvFoto = (SurfaceView) v.findViewById(R.id.SvFoto);
+        /*SvFoto = (SurfaceView) v.findViewById(R.id.SvFoto);
         surfaceHolder = SvFoto.getHolder();
-        surfaceHolder.addCallback(this);
+        surfaceHolder.addCallback(this);*/
+        bcv = (CompoundBarcodeView) v.findViewById(R.id.bcv);
+        bcv.decodeContinuous(callback);
         btn_accept = (CardView) v.findViewById(R.id.btn_accept);
         btn_accept.setOnClickListener(this);
+        list = (RecyclerView) v.findViewById(R.id.list);
+
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        bcv.resume();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        bcv.pause();
+        super.onPause();
+    }
+
+    private BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            if(result.getText() != null){
+                bcv.setStatusText("");
+            }
+
+            String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
+            String selection = "article_code = ?";
+            String[] selectionArgs = new String[] {result.toString()};
+            Cursor articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
+
+            if(articulosCursor.getCount()>0){
+                Item = new ArrayList();
+                llenalista(articulosCursor);
+                list.setAdapter(new MyArticulosRecyclerViewAdapter(Item, TiendaFragment.this));
+            }
+
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> resultPoints) {
+
+        }
+    };
+
+    private void llenalista(Cursor articulosCursor) {
+        if(articulosCursor.moveToFirst()){
+            do{
+                Item.add(new itemListArticle(
+                        articulosCursor.getInt(articulosCursor.getColumnIndex("article_id")),
+                        articulosCursor.getString(articulosCursor.getColumnIndex("article_name")),
+                        articulosCursor.getString(articulosCursor.getColumnIndex("article_desc")),
+                        articulosCursor.getDouble(articulosCursor.getColumnIndex("article_precio")),
+                        articulosCursor.getDouble(articulosCursor.getColumnIndex("article_costo")),
+                        articulosCursor.getBlob(articulosCursor.getColumnIndex("article_foto")),
+                        articulosCursor.getInt(articulosCursor.getColumnIndex("article_stock"))));
+            }while (articulosCursor.moveToNext());
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn_accept:
-                    start_camera();
+                if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(getContext(), "No existe permiso", Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 1);
+                }else {
+                    lanzaCamara();
+                }
                 break;
             default:
                 Toast.makeText(getContext(), getResources().getString(R.string.opcionInvalida), Toast.LENGTH_SHORT).show();
@@ -102,41 +185,13 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, Su
         }
     }
 
-    private void start_camera() {
-        try {
-            camera = Camera.open();
-        }catch (RuntimeException ex){
-            Log.e(TAG, "init_camera: " + ex);
-            return;
-        }
-        Camera.Parameters param;
-        param = camera.getParameters();
-        param.setPreviewFrameRate(20);
-        param.setPreviewSize(176,144);
-        camera.setDisplayOrientation(90);
-        camera.setParameters(param);
-        try {
-            camera.setPreviewDisplay(surfaceHolder);
-            camera.startPreview();
-        } catch (IOException e) {
-            Log.e(TAG, "init_camera: " + e);
-            return;
-        }
+    private void lanzaCamara() {
+        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+        integrator.initiateScan();
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-
+    public void onListFragmentInteraction(int id) {
+        Toast.makeText(getContext(), "Clicl lista", Toast.LENGTH_SHORT).show();
     }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-
-    }
-
 }
