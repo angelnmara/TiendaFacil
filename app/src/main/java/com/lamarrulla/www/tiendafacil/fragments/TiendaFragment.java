@@ -89,11 +89,8 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View v = inflater.inflate(R.layout.fragment_tienda, container, false);
-        /*SvFoto = (SurfaceView) v.findViewById(R.id.SvFoto);
-        surfaceHolder = SvFoto.getHolder();
-        surfaceHolder.addCallback(this);*/
         bcv = (CompoundBarcodeView) v.findViewById(R.id.bcv);
         bcv.decodeContinuous(callback);
         btn_accept = (CardView) v.findViewById(R.id.btn_accept);
@@ -120,27 +117,22 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
         public void barcodeResult(BarcodeResult result) {
             if(result.getText() != null){
                 bcv.setStatusText("");
+                String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
+                String selection = "article_code = ?";
+                String[] selectionArgs = new String[] {result.toString()};
+                Cursor articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
+
+                if(Item==null){
+                    Item = new ArrayList();
+                }
+
+                if(articulosCursor.getCount()>0){
+                    llenalista(articulosCursor);
+                    llenaRVA();
+                }else{
+                    Toast.makeText(getContext(), "articulo no encontrado", Toast.LENGTH_LONG).show();
+                }
             }
-
-            String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
-            String selection = "article_code = ?";
-            String[] selectionArgs = new String[] {result.toString()};
-            Cursor articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
-
-            if(Item==null){
-                Item = new ArrayList();
-            }
-
-            if(articulosCursor.getCount()>0){
-                //Item = new ArrayList();
-                llenalista(articulosCursor);
-                list.setLayoutManager(new LinearLayoutManager(getContext()));
-                list.setAdapter(new MyTiendaRVA(Item, TiendaFragment.this));
-                list.setItemAnimator(new DefaultItemAnimator());
-            }else{
-                Toast.makeText(getContext(), "articulo no encontrado", Toast.LENGTH_LONG).show();
-            }
-
         }
 
         @Override
@@ -148,6 +140,12 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
 
         }
     };
+
+    private void llenaRVA() {
+        list.setLayoutManager(new LinearLayoutManager(getContext()));
+        list.setAdapter(new MyTiendaRVA(Item, TiendaFragment.this));
+        list.setItemAnimator(new DefaultItemAnimator());
+    }
 
     private void llenalista(Cursor articulosCursor) {
         if(articulosCursor.moveToFirst()){
@@ -168,24 +166,13 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn_accept:
-                /*if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(getContext(), "No existe permiso", Toast.LENGTH_SHORT).show();
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, 1);
-                }else {
-                    lanzaCamara();
-                }
-                break;*/
                 Item = new ArrayList();
+                llenaRVA();
                 break;
             default:
                 Toast.makeText(getContext(), getResources().getString(R.string.opcionInvalida), Toast.LENGTH_SHORT).show();
                 break;
         }
-    }
-
-    private void lanzaCamara() {
-        IntentIntegrator integrator = new IntentIntegrator(getActivity());
-        integrator.initiateScan();
     }
 
     @Override
