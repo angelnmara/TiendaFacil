@@ -3,6 +3,7 @@ package com.lamarrulla.www.tiendafacil.fragments;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.zxing.ResultPoint;
+import com.google.zxing.client.android.BeepManager;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
@@ -49,7 +51,11 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
 
     private CompoundBarcodeView bcv;
     private CardView btn_accept;
+    private CardView btn_Limpiar;
     private RecyclerView list;
+    private BeepManager mBeepManager;
+
+    final Handler mHandler = new Handler();
 
     Camera camera;
 
@@ -92,9 +98,13 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
 
         View v = inflater.inflate(R.layout.fragment_tienda, container, false);
         bcv = (CompoundBarcodeView) v.findViewById(R.id.bcv);
-        bcv.decodeContinuous(callback);
+        bcv.setStatusText("Escanea un codigo en el recuadro");
+        bcv.decodeSingle(callback);
+        mBeepManager = new BeepManager(getActivity());
         btn_accept = (CardView) v.findViewById(R.id.btn_accept);
+        btn_Limpiar = (CardView) v.findViewById(R.id.btn_Limpiar);
         btn_accept.setOnClickListener(this);
+        btn_Limpiar.setOnClickListener(this);
         list = (RecyclerView) v.findViewById(R.id.list);
 
         return v;
@@ -103,6 +113,9 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
     @Override
     public void onResume() {
         bcv.resume();
+        if(Item!=null){
+            llenaRVA();
+        }
         super.onResume();
     }
 
@@ -117,6 +130,8 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
         public void barcodeResult(BarcodeResult result) {
             if(result.getText() != null){
                 bcv.setStatusText("");
+                mBeepManager.playBeepSoundAndVibrate();
+
                 String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
                 String selection = "article_code = ?";
                 String[] selectionArgs = new String[] {result.toString()};
@@ -133,6 +148,14 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
                     Toast.makeText(getContext(), "articulo no encontrado", Toast.LENGTH_LONG).show();
                 }
             }
+
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bcv.setStatusText("Escanea un codigo en el recuadro");
+                    bcv.decodeSingle(callback);
+                }
+            }, 1000);
         }
 
         @Override
@@ -166,6 +189,10 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn_accept:
+                bcv.setStatusText("Escanea un codigo en el recuadro");
+                bcv.decodeSingle(callback);
+                break;
+            case R.id.btn_Limpiar:
                 Item = new ArrayList();
                 llenaRVA();
                 break;

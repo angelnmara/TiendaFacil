@@ -13,6 +13,7 @@
     <string name="alta">Alta</string>
     <string name="edita">Edita</string>
     <string name="total">Total</string>
+    <string name="limpiar">Limpiar</string>
 
     <string name="opcionInvalida">Opcion invalida</string>
     <string name="title_activity_login">Sign in</string>
