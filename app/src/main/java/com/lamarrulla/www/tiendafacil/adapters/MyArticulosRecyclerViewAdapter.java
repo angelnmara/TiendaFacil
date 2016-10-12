@@ -1,4 +1,4 @@
-package com.lamarrulla.www.tiendafacil.fragments;
+package com.lamarrulla.www.tiendafacil.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

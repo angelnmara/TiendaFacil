@@ -38,7 +38,7 @@
 
             <TextView
                 style="@style/TextViexCard"
-                android:text="@string/buscar"/>
+                android:text="@string/total"/>
 
         </android.support.v7.widget.CardView>
 

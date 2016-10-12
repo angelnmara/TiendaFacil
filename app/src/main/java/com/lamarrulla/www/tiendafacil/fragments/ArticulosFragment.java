@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.lamarrulla.www.tiendafacil.R;
+import com.lamarrulla.www.tiendafacil.adapters.MyArticulosRecyclerViewAdapter;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 import com.lamarrulla.www.tiendafacil.contents.genericContentCursor;
 
