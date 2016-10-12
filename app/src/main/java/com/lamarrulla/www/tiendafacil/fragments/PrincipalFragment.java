@@ -1,7 +1,5 @@
 package com.lamarrulla.www.tiendafacil.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -110,7 +108,7 @@ public class PrincipalFragment extends Fragment {
     private void setupViewPager(ViewPager viewpager){
         ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
         adapter.addFragment(new TiendaFragment().newInstance("", ""), "TIENDA");
-        adapter.addFragment(new AlmacenFragment().newInstance("", ""), "ALMACEN");
+        adapter.addFragment(new AlmacenListFragment().newInstance("", ""), "ALMACEN");
         viewpager.setAdapter(adapter);
     }
 

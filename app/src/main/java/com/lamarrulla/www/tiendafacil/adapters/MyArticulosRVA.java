@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lamarrulla.www.tiendafacil.R;
-/*import com.lamarrulla.www.tiendafacil.fragments.ArticulosFragment.OnListFragmentInteractionListener;*/
+/*import com.lamarrulla.www.tiendafacil.fragments.ArticulosListFragment.OnListFragmentInteractionListener;*/
 //import com.lamarrulla.www.tiendafacil.contents.genericContentJSON.DummyItem;
 import com.lamarrulla.www.tiendafacil.listas.itemListArticle;
 
@@ -21,12 +21,12 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyArticulosRecyclerViewAdapter extends RecyclerView.Adapter<MyArticulosRecyclerViewAdapter.ViewHolder> {
+public class MyArticulosRVA extends RecyclerView.Adapter<MyArticulosRVA.ViewHolder> {
 
     private final List<itemListArticle> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyArticulosRecyclerViewAdapter(List<itemListArticle> items, OnListFragmentInteractionListener listener) {
+    public MyArticulosRVA(List<itemListArticle> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }

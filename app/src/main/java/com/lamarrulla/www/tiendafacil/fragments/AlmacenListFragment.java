@@ -12,12 +12,12 @@ import com.lamarrulla.www.tiendafacil.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AlmacenFragment.OnFragmentInteractionListener} interface
+ * {@link AlmacenListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AlmacenFragment#newInstance} factory method to
+ * Use the {@link AlmacenListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AlmacenFragment extends Fragment {
+public class AlmacenListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -28,11 +28,11 @@ public class AlmacenFragment extends Fragment {
     private String mParam2;
 
     private FrameLayout flyListaProducto;
-    private ArticulosFragment AF;
+    private ArticulosListFragment AF;
 
     //private OnFragmentInteractionListener mListener;
 
-    public AlmacenFragment() {
+    public AlmacenListFragment() {
         // Required empty public constructor
     }
 
@@ -42,11 +42,11 @@ public class AlmacenFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AlmacenFragment.
+     * @return A new instance of fragment AlmacenListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AlmacenFragment newInstance(String param1, String param2) {
-        AlmacenFragment fragment = new AlmacenFragment();
+    public static AlmacenListFragment newInstance(String param1, String param2) {
+        AlmacenListFragment fragment = new AlmacenListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,8 +68,8 @@ public class AlmacenFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_almacen, container, false);
         flyListaProducto = (FrameLayout) v.findViewById(R.id.flyListaProducto);
-        AF = new ArticulosFragment().newInstance(0);
-        getFragmentManager().beginTransaction().replace(R.id.flyListaProducto, AF, "ArticulosFragment").commit();
+        AF = new ArticulosListFragment().newInstance(0);
+        getFragmentManager().beginTransaction().replace(R.id.flyListaProducto, AF, "ArticulosListFragment").commit();
         return v;
     }
 

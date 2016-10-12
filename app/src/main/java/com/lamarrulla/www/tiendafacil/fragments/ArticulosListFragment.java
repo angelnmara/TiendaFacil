@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.lamarrulla.www.tiendafacil.R;
-import com.lamarrulla.www.tiendafacil.adapters.MyArticulosRecyclerViewAdapter;
+import com.lamarrulla.www.tiendafacil.adapters.MyArticulosRVA;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 import com.lamarrulla.www.tiendafacil.contents.genericContentCursor;
 
@@ -23,7 +23,7 @@ import com.lamarrulla.www.tiendafacil.contents.genericContentCursor;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ArticulosFragment extends Fragment implements MyArticulosRecyclerViewAdapter.OnListFragmentInteractionListener{
+public class ArticulosListFragment extends Fragment implements MyArticulosRVA.OnListFragmentInteractionListener{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -35,13 +35,13 @@ public class ArticulosFragment extends Fragment implements MyArticulosRecyclerVi
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ArticulosFragment() {
+    public ArticulosListFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ArticulosFragment newInstance(int columnCount) {
-        ArticulosFragment fragment = new ArticulosFragment();
+    public static ArticulosListFragment newInstance(int columnCount) {
+        ArticulosListFragment fragment = new ArticulosListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -76,7 +76,7 @@ public class ArticulosFragment extends Fragment implements MyArticulosRecyclerVi
             //genericContentJSON.getData();
             genericContentCursor.getData(ArticulosCursor, "itemListArticle");
             if (genericContentCursor.Item != null){
-                recyclerView.setAdapter(new MyArticulosRecyclerViewAdapter(genericContentCursor.Item, ArticulosFragment.this));
+                recyclerView.setAdapter(new MyArticulosRVA(genericContentCursor.Item, ArticulosListFragment.this));
             }
         }
         return view;

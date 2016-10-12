@@ -17,12 +17,12 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyMenuRecyclerViewAdapter extends RecyclerView.Adapter<MyMenuRecyclerViewAdapter.ViewHolder> {
+public class MyMenuRVA extends RecyclerView.Adapter<MyMenuRVA.ViewHolder> {
 
     private final List<MenuItem> mValues;
     private final OnListFragmentMenu mListener;
 
-    public MyMenuRecyclerViewAdapter(List<MenuItem> items, OnListFragmentMenu listener) {
+    public MyMenuRVA(List<MenuItem> items, OnListFragmentMenu listener) {
         mValues = items;
         mListener = listener;
     }

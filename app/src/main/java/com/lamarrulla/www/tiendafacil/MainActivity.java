@@ -29,14 +29,14 @@ import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.lamarrulla.www.tiendafacil.adapters.MyMenuRecyclerViewAdapter;
+import com.lamarrulla.www.tiendafacil.adapters.MyMenuRVA;
 import com.lamarrulla.www.tiendafacil.contents.MenuContent;
 import com.lamarrulla.www.tiendafacil.fragments.AltaArticuloFragment;
 import com.lamarrulla.www.tiendafacil.fragments.PrincipalFragment;
 import com.lamarrulla.www.tiendafacil.utils.getBitmap;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MyMenuRecyclerViewAdapter.OnListFragmentMenu, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MyMenuRVA.OnListFragmentMenu, View.OnClickListener {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
             recyclerView.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.setAdapter(new MyMenuRecyclerViewAdapter(MenuContent.ITEMS, MainActivity.this));
+            recyclerView.setAdapter(new MyMenuRVA(MenuContent.ITEMS, MainActivity.this));
         }
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

@@ -1,13 +1,9 @@
 package com.lamarrulla.www.tiendafacil.fragments;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,8 +19,7 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.lamarrulla.www.tiendafacil.R;
-import com.lamarrulla.www.tiendafacil.adapters.MyArticulosRecyclerViewAdapter;
-import com.lamarrulla.www.tiendafacil.adapters.MyListTiendaAdapter;
+import com.lamarrulla.www.tiendafacil.adapters.MyTiendaRVA;
 import com.lamarrulla.www.tiendafacil.listas.itemListArticle;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 
@@ -39,7 +34,7 @@ import java.util.List;
  * Use the {@link TiendaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TiendaFragment extends Fragment implements View.OnClickListener, MyListTiendaAdapter.OnListTiendaAdapter {
+public class TiendaFragment extends Fragment implements View.OnClickListener, MyTiendaRVA.OnListTiendaAdapter {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -140,7 +135,7 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
                 //Item = new ArrayList();
                 llenalista(articulosCursor);
                 list.setLayoutManager(new LinearLayoutManager(getContext()));
-                list.setAdapter(new MyListTiendaAdapter(Item, TiendaFragment.this));
+                list.setAdapter(new MyTiendaRVA(Item, TiendaFragment.this));
                 list.setItemAnimator(new DefaultItemAnimator());
             }else{
                 Toast.makeText(getContext(), "articulo no encontrado", Toast.LENGTH_LONG).show();

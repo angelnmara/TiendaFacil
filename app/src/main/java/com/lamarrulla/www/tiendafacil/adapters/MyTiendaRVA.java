@@ -16,12 +16,12 @@ import java.util.List;
  * Created by root on 11/10/16.
  */
 
-public class MyListTiendaAdapter extends RecyclerView.Adapter<MyListTiendaAdapter.ViewHolder> {
+public class MyTiendaRVA extends RecyclerView.Adapter<MyTiendaRVA.ViewHolder> {
 
     private final List<itemListArticle> mItem;
     private final OnListTiendaAdapter mListener;
 
-    public MyListTiendaAdapter(List<itemListArticle> items, OnListTiendaAdapter listener){
+    public MyTiendaRVA(List<itemListArticle> items, OnListTiendaAdapter listener){
         mItem = items;
         mListener = listener;
     }
