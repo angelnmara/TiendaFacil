@@ -15,7 +15,11 @@
     <string name="total">Total</string>
     <string name="limpiar">Limpiar</string>
 
-    <string name="opcionInvalida">Opcion invalida</string>
+    mensajes
+    <string name="MsjOpcionInvalida">Opcion invalida</string>
+    <string name="msjArticuloNoInsertado">El articulo no se inserto correctamente</string>
+
+
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -32,5 +36,9 @@
 
     <string name="accept">ACEPTAR</string>
     <string name="edit">ACTUALIZA</string>
+
+    <string name="total_">Total:</string>
+    <string name="articulos_">Numero de articulos:</string>
+
 
 </resources>

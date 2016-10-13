@@ -30,6 +30,18 @@
 
         <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
+                                                       android:id="@+id/textinputMarca">
+            <EditText android:hint="Marca"
+                      android:id="@+id/txtMarca"
+                      android:layout_width="match_parent"
+                      android:maxLines="1"
+                      android:maxLength="100"
+                      android:layout_height="wrap_content"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+                                                       android:layout_height="wrap_content"
                                                        android:id="@+id/textinputNombre">
             <EditText android:hint="Nombre"
                       android:id="@+id/txtNombre"

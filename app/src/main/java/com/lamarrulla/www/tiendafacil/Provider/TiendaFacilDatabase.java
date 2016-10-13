@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.ArticleColumns;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.UserColumns;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.TipoDato;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.VentaColumns;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.MarcaColumns;
 
 /**
  * Created by Qualtop on 02/09/2016.
@@ -17,7 +20,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "TiendaFacilDB";
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 10;
 
     static SQLiteDatabase dbUse;
 
@@ -68,6 +71,18 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
             db.setTransactionSuccessful();
             db.endTransaction();
 
+            db.beginTransaction();
+            //db.delete(Tables.ARTICLE, null, null);
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.VENTA);
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
+            db.beginTransaction();
+            //db.delete(Tables.ARTICLE, null, null);
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.MARCA);
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
         }catch (Exception ex){
             Log.d(TAG, ex.getMessage());
         }
@@ -109,21 +124,62 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
         strBuilder.append("CREATE TABLE IF NOT EXISTS ")
                 .append(Tables.ARTICLE).append("(")
                 .append(ArticleColumns.ARTICLE_ID)
-                .append(" INTEGER PRIMARY KEY AUTOINCREMENT,")
+                .append(TipoDato.INT_KEY)
                 .append(ArticleColumns.ARTICLE_CODE)
-                .append(" TEXT COLLATE NOCASE,")
+                .append(TipoDato.TEXT_)
                 .append(ArticleColumns.ARTICLE_NAME)
-                .append(" TEXT COLLATE NOCASE,")
+                .append(TipoDato.TEXT_)
                 .append(ArticleColumns.ARTICLE_DESC)
-                .append(" TEXT COLLATE NOCASE,")
+                .append(TipoDato.TEXT_)
+                .append(ArticleColumns.ARTICLE_MARCA_ID)
+                .append(TipoDato.INT_)
                 .append(ArticleColumns.ARTICLE_PRECIO)
-                .append(" INTEGER,")
+                .append(TipoDato.DOUBLE_)
                 .append(ArticleColumns.ARTICLE_COSTO)
-                .append(" INTEGER,")
+                .append(TipoDato.DOUBLE_)
                 .append(ArticleColumns.ARTICLE_FOTO)
-                .append(" BLOB,")
+                .append(TipoDato.BLOB_)
                 .append(ArticleColumns.ARTICLE_STOCK)
-                .append(" TEXT COLLATE NOCASE)");
+                .append(TipoDato.TEXT)
+                .append(")");
+
+        db.execSQL(strBuilder.toString());
+        strBuilder.setLength(0);
+
+        strBuilder.append(TipoDato.CREATE_TABLE)
+                .append(Tables.MARCA)
+                .append("(")
+                .append(MarcaColumns.MARCA_ID)
+                .append(TipoDato.INT_KEY)
+                .append(MarcaColumns.MARCA_CODE)
+                .append(TipoDato.TEXT_)
+                .append(MarcaColumns.MARCA_NAME)
+                .append(TipoDato.TEXT_)
+                .append(MarcaColumns.MARCA_OTRO1)
+                .append(TipoDato.TEXT_)
+                .append(MarcaColumns.MARCA_OTRO2)
+                .append(TipoDato.TEXT)
+                .append(")");
+
+        db.execSQL(strBuilder.toString());
+        strBuilder.setLength(0);
+
+        strBuilder.append(TipoDato.CREATE_TABLE)
+                .append(Tables.VENTA)
+                .append("(")
+                .append(VentaColumns.VENTA_ID)
+                .append(TipoDato.INT_KEY)
+                .append(VentaColumns.VENTA_CODE)
+                .append(TipoDato.TEXT_)
+                .append(VentaColumns.VENTA_NAME)
+                .append(TipoDato.TEXT_)
+                .append(VentaColumns.VENTA_DESC)
+                .append(TipoDato.TEXT_)
+                .append(VentaColumns.VENTA_PRECIO)
+                .append(TipoDato.DOUBLE_)
+                .append(VentaColumns.VENTA_FOTO)
+                .append(TipoDato.BLOB)
+                .append(")");
 
         db.execSQL(strBuilder.toString());
         strBuilder.setLength(0);
@@ -132,5 +188,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
     interface Tables{
         static final String USER = "user";
         static final String ARTICLE = "article";
+        static final String VENTA = "venta";
+        static final String MARCA = "marca";
     }
 }

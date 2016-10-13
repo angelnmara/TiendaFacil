@@ -1,5 +1,7 @@
 package com.lamarrulla.www.tiendafacil.fragments;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -16,14 +18,15 @@ import android.widget.Toast;
 
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.BeepManager;
-import com.google.zxing.integration.android.IntentIntegrator;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
 import com.lamarrulla.www.tiendafacil.R;
 import com.lamarrulla.www.tiendafacil.adapters.MyTiendaRVA;
-import com.lamarrulla.www.tiendafacil.listas.itemListArticle;
+import com.lamarrulla.www.tiendafacil.listas.itemListVenta;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
+
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.venta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,17 +135,20 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
                 bcv.setStatusText("");
                 mBeepManager.playBeepSoundAndVibrate();
 
-                String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
+                String[] projection = new String[] { "article_id", "article_code", "article_name", "article_desc", "article_precio", "article_costo", "article_foto", "article_stock" };
                 String selection = "article_code = ?";
                 String[] selectionArgs = new String[] {result.toString()};
                 Cursor articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
 
-                if(Item==null){
+                /*if(Item==null){
                     Item = new ArrayList();
-                }
+                }*/
 
                 if(articulosCursor.getCount()>0){
-                    llenalista(articulosCursor);
+                    saveVenta(articulosCursor);
+                    String[] projectionVenta = new String[] { "venta_name", "venta_desc", "venta_precio", "venta_foto"};
+                    Cursor ventaCursor = getContext().getContentResolver().query(venta.CONTENT_URI, projectionVenta, null, null, null);
+                    llenalista(ventaCursor);
                     llenaRVA();
                 }else{
                     Toast.makeText(getContext(), "articulo no encontrado", Toast.LENGTH_LONG).show();
@@ -164,24 +170,44 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
         }
     };
 
+    private void saveVenta(Cursor articulosCursor) {
+        try{
+            final ContentResolver resolver = getContext().getContentResolver();
+            final ContentValues values = new ContentValues();
+            if(articulosCursor.moveToFirst()){
+                do{
+                    values.put(venta.VENTA_CODE, articulosCursor.getString(articulosCursor.getColumnIndex("article_code")));
+                    values.put(venta.VENTA_PRECIO, articulosCursor.getDouble(articulosCursor.getColumnIndex("article_precio")));
+                    values.put(venta.VENTA_DESC, articulosCursor.getString(articulosCursor.getColumnIndex("article_desc")));
+                    values.put(venta.VENTA_FOTO, articulosCursor.getBlob(articulosCursor.getColumnIndex("article_foto")));
+                    values.put(venta.VENTA_NAME, articulosCursor.getString(articulosCursor.getColumnIndex("article_name")));
+                }while (articulosCursor.moveToNext());
+                resolver.insert(venta.CONTENT_URI, values);
+            }
+        }catch (Exception ex){
+            Toast.makeText(getContext(), getResources().getString(R.string.msjArticuloNoInsertado), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     private void llenaRVA() {
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         list.setAdapter(new MyTiendaRVA(Item, TiendaFragment.this));
         list.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private void llenalista(Cursor articulosCursor) {
-        if(articulosCursor.moveToFirst()){
-            do{
-                Item.add(new itemListArticle(
-                        articulosCursor.getInt(articulosCursor.getColumnIndex("article_id")),
-                        articulosCursor.getString(articulosCursor.getColumnIndex("article_name")),
-                        articulosCursor.getString(articulosCursor.getColumnIndex("article_desc")),
-                        articulosCursor.getDouble(articulosCursor.getColumnIndex("article_precio")),
-                        articulosCursor.getDouble(articulosCursor.getColumnIndex("article_costo")),
-                        articulosCursor.getBlob(articulosCursor.getColumnIndex("article_foto")),
-                        articulosCursor.getInt(articulosCursor.getColumnIndex("article_stock"))));
-            }while (articulosCursor.moveToNext());
+    private void llenalista(Cursor ventaCursor) {
+        if(ventaCursor.getCount()>0){
+            Item = new ArrayList();
+            if(ventaCursor.moveToFirst()){
+                do{
+                    Item.add(new itemListVenta(
+                            ventaCursor.getString(ventaCursor.getColumnIndex("venta_name")),
+                            ventaCursor.getString(ventaCursor.getColumnIndex("venta_desc")),
+                            ventaCursor.getDouble(ventaCursor.getColumnIndex("venta_precio")),
+                            ventaCursor.getBlob(ventaCursor.getColumnIndex("venta_foto"))));
+                }while (ventaCursor.moveToNext());
+            }
         }
     }
 
@@ -193,11 +219,13 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
                 bcv.decodeSingle(callback);
                 break;
             case R.id.btn_Limpiar:
+                final ContentResolver resolver = getContext().getContentResolver();
+                resolver.delete(venta.CONTENT_URI,null, null);
                 Item = new ArrayList();
                 llenaRVA();
                 break;
             default:
-                Toast.makeText(getContext(), getResources().getString(R.string.opcionInvalida), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.MsjOpcionInvalida), Toast.LENGTH_SHORT).show();
                 break;
         }
     }

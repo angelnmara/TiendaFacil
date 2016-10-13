@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             default:
-                Toast.makeText(this, getResources().getString(R.string.opcionInvalida), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.MsjOpcionInvalida), Toast.LENGTH_SHORT).show();
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             default:
-                Toast.makeText(this, getResources().getString(R.string.opcionInvalida), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.MsjOpcionInvalida), Toast.LENGTH_SHORT).show();
                 break;
         }
     }

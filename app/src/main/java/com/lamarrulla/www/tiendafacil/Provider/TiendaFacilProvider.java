@@ -16,8 +16,12 @@ import android.util.Log;
 
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.ArticleColumns;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.UserColumns;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.VentaColumns;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.MarcaColumns;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.article;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.user;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.venta;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.marca;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilDatabase.Tables;
 
 import java.util.ArrayList;
@@ -31,8 +35,16 @@ public class TiendaFacilProvider extends ContentProvider {
 
     private static final int CODE_ALL_USERS = 1;
     private static final int CODE_SINGLE_USER = 2;
+
     private static final int CODE_ALL_ARTICLES = 3;
     private static final int CODE_SINGLE_ARTICLE = 4;
+
+    private static final int CODE_ALL_VENTA = 5;
+    private static final int CODE_SINGLE_VENTA = 6;
+
+    private static final int CODE_ALL_MARCA = 7;
+    private static final int CODE_SINGLE_MARCA = 8;
+
 
     private Context context;
     private static TiendaFacilDatabase mOpenHelper;
@@ -41,10 +53,19 @@ public class TiendaFacilProvider extends ContentProvider {
     private static UriMatcher buildUriMatcher() {
         final String authority = TiendaFacilContract.CONTENT_AUTHORITY;
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+
         matcher.addURI(authority, TiendaFacilContract.PATH_USER, CODE_ALL_USERS);
         matcher.addURI(authority, TiendaFacilContract.PATH_USER + "/#", CODE_SINGLE_USER);
+
         matcher.addURI(authority, TiendaFacilContract.PATH_ARTICLE, CODE_ALL_ARTICLES);
         matcher.addURI(authority, TiendaFacilContract.PATH_ARTICLE + "/#", CODE_SINGLE_ARTICLE);
+
+        matcher.addURI(authority, TiendaFacilContract.PATH_VENTA, CODE_ALL_VENTA);
+        matcher.addURI(authority, TiendaFacilContract.PATH_VENTA + "/#", CODE_SINGLE_VENTA);
+
+        matcher.addURI(authority, TiendaFacilContract.PATH_MARCA, CODE_ALL_MARCA);
+        matcher.addURI(authority, TiendaFacilContract.PATH_MARCA + "/#", CODE_SINGLE_MARCA);
+
         return matcher;
     }
 
@@ -84,14 +105,35 @@ public class TiendaFacilProvider extends ContentProvider {
             case CODE_SINGLE_USER:
                 Id = user.getUserId(uri);
                 queryBuilder.appendWhere(UserColumns._ID + " = " + Id);
+
             case CODE_ALL_USERS:
                 queryBuilder.setTables(Tables.USER);
                 break;
+
             case CODE_SINGLE_ARTICLE:
                 Id = article.getArticleId(uri);
                 queryBuilder.appendWhere(ArticleColumns._ID + " = " + Id);
+
             case CODE_ALL_ARTICLES:
                 queryBuilder.setTables(Tables.ARTICLE);
+                break;
+
+            case CODE_SINGLE_VENTA:
+                Id = venta.getVentaId(uri);
+                queryBuilder.appendWhere(VentaColumns._ID + "=" + Id);
+                break;
+
+            case CODE_ALL_VENTA:
+                queryBuilder.setTables(Tables.VENTA);
+                break;
+
+            case CODE_SINGLE_MARCA:
+                Id = marca.getMarcaId(uri);
+                queryBuilder.appendWhere(MarcaColumns._ID + "=" + Id);
+                break;
+
+            case CODE_ALL_MARCA:
+                queryBuilder.setTables(Tables.MARCA);
                 break;
 
             default:
@@ -104,8 +146,17 @@ public class TiendaFacilProvider extends ContentProvider {
                 case CODE_ALL_USERS:
                     sortOrder = user.DEFAULT_SORT;
                     break;
+
                 case CODE_ALL_ARTICLES:
                     sortOrder = article.DEFAULT_SORT;
+                    break;
+
+                case CODE_ALL_VENTA:
+                    sortOrder = venta.DEFAULT_SORT;
+                    break;
+
+                case CODE_ALL_MARCA:
+                    sortOrder = marca.DEFAULT_SORT;
                     break;
             }
 
@@ -127,12 +178,28 @@ public class TiendaFacilProvider extends ContentProvider {
         switch (match){
             case CODE_ALL_USERS:
                 return user.CONTENT_TYPE;
+
             case CODE_SINGLE_USER:
                 return user.CONTENT_ITEM_TYPE;
+
             case CODE_ALL_ARTICLES:
                 return article.CONTENT_TYPE;
+
             case CODE_SINGLE_ARTICLE:
                 return article.CONTENT_ITEM_TYPE;
+
+            case CODE_ALL_VENTA:
+                return venta.CONTENT_TYPE;
+
+            case CODE_SINGLE_VENTA:
+                return venta.CONTENT_ITEM_TYPE;
+
+            case CODE_ALL_MARCA:
+                return marca.CONTENT_TYPE;
+
+            case CODE_SINGLE_MARCA:
+                return marca.CONTENT_ITEM_TYPE;
+
             default:
                 Log.d(TAG, "getType no definido");
         }
@@ -159,6 +226,16 @@ public class TiendaFacilProvider extends ContentProvider {
                 newUri = ContentUris.withAppendedId(article.CONTENT_URI, rowId);
                 break;
 
+            case CODE_ALL_VENTA:
+                rowId = db.insert(Tables.VENTA, null, values);
+                newUri = ContentUris.withAppendedId(venta.CONTENT_URI, rowId);
+                break;
+
+            case CODE_ALL_MARCA:
+                rowId = db.insert(Tables.MARCA, null, values);
+                newUri = ContentUris.withAppendedId(marca.CONTENT_URI, rowId);
+                break;
+
             default:
                 Log.d(TAG, "Tabla no existe");
                 break;
@@ -181,16 +258,38 @@ public class TiendaFacilProvider extends ContentProvider {
                 id = user.getUserId(uri);
                 deleteRows = db.delete(Tables.USER, UserColumns._ID + "=?", new String[]{id});
                 break;
+
             case CODE_ALL_USERS:
                 deleteRows = db.delete(Tables.USER, selection, selectionArgs);
                 break;
+
             case CODE_SINGLE_ARTICLE:
                 id = article.getArticleId(uri);
                 deleteRows = db.delete(Tables.ARTICLE, ArticleColumns._ID + "=?", new String[]{id});
                 break;
+
             case CODE_ALL_ARTICLES:
                 deleteRows = db.delete(Tables.ARTICLE, selection, selectionArgs);
                 break;
+
+            case CODE_SINGLE_VENTA:
+                id = venta.getVentaId(uri);
+                deleteRows = db.delete(Tables.VENTA, VentaColumns._ID + "=?", new String[]{id});
+                break;
+
+            case CODE_ALL_VENTA:
+                deleteRows = db.delete(Tables.VENTA, selection, selectionArgs);
+                break;
+
+            case CODE_SINGLE_MARCA:
+                id = marca.getMarcaId(uri);
+                deleteRows = db.delete(Tables.MARCA, MarcaColumns._ID + "=?", new String[]{id});
+                break;
+
+            case CODE_ALL_MARCA:
+                deleteRows = db.delete(Tables.MARCA, selection, selectionArgs);
+                break;
+
             default:
                 Log.d(TAG, "No existe tabla para borrar");
                 break;
@@ -213,15 +312,36 @@ public class TiendaFacilProvider extends ContentProvider {
                 id = user.getUserId(uri);
                 updateRows = db.update(Tables.USER, values, UserColumns._ID + "=?", new String[]{id});
                 break;
+
             case CODE_ALL_USERS:
                 updateRows = db.update(Tables.USER, values, selection, selectionArgs);
                 break;
+
             case CODE_SINGLE_ARTICLE:
                 id = article.getArticleId(uri);
                 updateRows = db.update(Tables.ARTICLE, values, ArticleColumns._ID + "=?", new String[]{id});
                 break;
+
             case CODE_ALL_ARTICLES:
                 updateRows = db.update(Tables.ARTICLE, values, selection, selectionArgs);
+                break;
+
+            case CODE_SINGLE_VENTA:
+                id = venta.getVentaId(uri);
+                updateRows = db.update(Tables.VENTA, values, VentaColumns._ID + "=?", new String[]{id});
+                break;
+
+            case CODE_ALL_VENTA:
+                updateRows = db.update(Tables.VENTA, values, selection, selectionArgs);
+                break;
+
+            case CODE_SINGLE_MARCA:
+                id = marca.getMarcaId(uri);
+                updateRows = db.update(Tables.MARCA, values, MarcaColumns._ID + "=?", new String[]{id});
+                break;
+
+            case CODE_ALL_MARCA:
+                updateRows = db.update(Tables.MARCA, values, selection, selectionArgs);
                 break;
 
             default:

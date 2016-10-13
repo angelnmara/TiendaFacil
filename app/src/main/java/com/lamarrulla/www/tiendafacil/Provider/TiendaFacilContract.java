@@ -2,6 +2,7 @@ package com.lamarrulla.www.tiendafacil.provider;
 
 import android.content.ContentResolver;
 import android.net.Uri;
+import android.os.StrictMode;
 import android.provider.BaseColumns;
 
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilDatabase.Tables;
@@ -16,6 +17,8 @@ public final class TiendaFacilContract {
 
     static final String PATH_USER = Tables.USER;
     static final String PATH_ARTICLE = Tables.ARTICLE;
+    static final String PATH_VENTA = Tables.VENTA;
+    static final String PATH_MARCA = Tables.MARCA;
 
     private TiendaFacilContract(){}
 
@@ -79,10 +82,45 @@ public final class TiendaFacilContract {
         public static final String ARTICLE_CODE = "article_code";
         public static final String ARTICLE_NAME = "article_name";
         public static final String ARTICLE_DESC = "article_desc";
+        public static final String ARTICLE_MARCA_ID = "article_marca_id";
         public static final String ARTICLE_PRECIO = "article_precio";
         public static final String ARTICLE_COSTO = "article_costo";
         public static final String ARTICLE_FOTO = "article_foto";
         public static final String ARTICLE_STOCK = "article_stock";
+    }
+
+    interface MarcaColumns extends BaseColumns{
+        public static final String MARCA_ID = "marca_id";
+        public static final String MARCA_NAME = "marca_name";
+        public static final String MARCA_CODE = "marca_code";
+        public static final String MARCA_OTRO1 = "marca_otro1";
+        public static final String MARCA_OTRO2 = "marca_otro2";
+    }
+
+    interface VentaColumns extends BaseColumns{
+        public static final String VENTA_ID = "venta_id";
+        public static final String VENTA_CODE = "venta_code";
+        public static final String VENTA_NAME = "venta_name";
+        public static final String VENTA_DESC = "venta_desc";
+        public static final String VENTA_PRECIO = "venta_precio";
+        public static final String VENTA_FOTO = "venta_foto";
+    }
+
+    interface TipoDato extends BaseColumns{
+        public static final String TEXT_ = " TEXT COLLATE NOCASE,";
+        public static final String TEXT = " TEXT COLLATE NOCASE";
+        public static final String INT_KEY = " INTEGER PRIMARY KEY AUTOINCREMENT,";
+        public static final String INT_ = " INTEGER,";
+        public static final String INT = " INTEGER";
+        public static final String BLOB_ = " BLOB,";
+        public static final String BLOB = " BLOB";
+        public static final String REAL_ = " REAL,";
+        public static final String REAL = " REAL";
+        public static final String DOUBLE_ = " REAL,";
+        public static final String DOUBLE = " REAL";
+        public static final String DATETIME_ = " NUMERIC,";
+        public static final String DATETIME = " NUMERIC";
+        public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS ";
     }
 
     public static abstract class user implements UserColumns{
@@ -101,6 +139,37 @@ public final class TiendaFacilContract {
 
     }
 
+    public static abstract class venta implements VentaColumns{
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_VENTA).build();
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.VENTA;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.VENTA;
+        public static final String DEFAULT_SORT = VentaColumns.VENTA_ID + " COLLATE NOCASE ASC";
+
+        public static Uri buildVentaUri(String VentaId){
+            return CONTENT_URI.buildUpon().appendPath(VENTA_ID).build();
+        }
+
+        public static String getVentaId(Uri uri){
+            return uri.getLastPathSegment();
+        }
+
+    }
+
+    public static abstract class marca implements MarcaColumns{
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MARCA).build();
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.MARCA;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.MARCA;
+        public static final String DEFAULT_SORT = MarcaColumns.MARCA_ID + " COLLATE NOCASE ASC";
+
+        public static Uri buildMarcaUri(String VentaId){
+            return CONTENT_URI.buildUpon().appendPath(MARCA_ID).build();
+        }
+
+        public static String getMarcaId(Uri uri){
+            return uri.getLastPathSegment();
+        }
+    }
+
     public static abstract class article implements ArticleColumns{
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_ARTICLE).build();
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.ARTICLE;
@@ -108,7 +177,7 @@ public final class TiendaFacilContract {
         public static final String DEFAULT_SORT = ArticleColumns.ARTICLE_ID + " COLLATE NOCASE ASC";
 
         public static Uri buildArticleUri(String ArticleId){
-            return CONTENT_URI.buildUpon().appendPath(_ID).build();
+            return CONTENT_URI.buildUpon().appendPath(ARTICLE_ID).build();
         }
 
         public static String getArticleId(Uri uri){

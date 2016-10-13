@@ -25,8 +25,6 @@ import com.lamarrulla.www.tiendafacil.MainActivity;
 import com.lamarrulla.www.tiendafacil.R;
 import com.lamarrulla.www.tiendafacil.dialogs.GenericDilog;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
-import com.lamarrulla.www.tiendafacil.provider.TiendaFacilDatabase;
-import com.lamarrulla.www.tiendafacil.utils.ViewPagerAdapter;
 
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.article;
 
@@ -224,6 +222,7 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
 
             values.put(article.ARTICLE_CODE, mParam1);
             values.put(article.ARTICLE_DESC, txtDescripcion.getText().toString());
+            values.put(article.ARTICLE_MARCA_ID, 1);
             values.put(article.ARTICLE_NAME, txtNombre.getText().toString());
             values.put(article.ARTICLE_PRECIO, txtPrecio.getText().toString());
             values.put(article.ARTICLE_COSTO, txtCosto.getText().toString());

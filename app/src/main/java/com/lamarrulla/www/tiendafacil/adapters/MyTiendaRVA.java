@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.lamarrulla.www.tiendafacil.R;
 import com.lamarrulla.www.tiendafacil.listas.itemListArticle;
+import com.lamarrulla.www.tiendafacil.listas.itemListVenta;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import java.util.List;
 
 public class MyTiendaRVA extends RecyclerView.Adapter<MyTiendaRVA.ViewHolder> {
 
-    private final List<itemListArticle> mItem;
+    private final List<itemListVenta> mItem;
     private final OnListTiendaAdapter mListener;
 
-    public MyTiendaRVA(List<itemListArticle> items, OnListTiendaAdapter listener){
+    public MyTiendaRVA(List<itemListVenta> items, OnListTiendaAdapter listener){
         mItem = items;
         mListener = listener;
     }
@@ -35,8 +36,8 @@ public class MyTiendaRVA extends RecyclerView.Adapter<MyTiendaRVA.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mItem = mItem.get(position);
-        holder.mIdView.setText(mItem.get(position).getArticle_name());
-        holder.mContentView.setText(mItem.get(position).getArticle_desc());
+        holder.mIdView.setText(mItem.get(position).getVenta_name());
+        holder.mContentView.setText(mItem.get(position).getVenta_desc());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class MyTiendaRVA extends RecyclerView.Adapter<MyTiendaRVA.ViewHolder> {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public itemListArticle mItem;
+        public itemListVenta mItem;
         public ImageView imgIcon;
 
         public ViewHolder(View itemView) {
