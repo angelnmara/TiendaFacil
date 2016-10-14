@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.ResultPoint;
@@ -57,6 +58,10 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
     private CardView btn_Limpiar;
     private RecyclerView list;
     private BeepManager mBeepManager;
+    private TextView txtTotal;
+    private TextView txtNoArticulos;
+    private double total;
+    private int noArticulos;
 
     final Handler mHandler = new Handler();
 
@@ -109,6 +114,8 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
         btn_accept.setOnClickListener(this);
         btn_Limpiar.setOnClickListener(this);
         list = (RecyclerView) v.findViewById(R.id.list);
+        txtNoArticulos = (TextView) v.findViewById(R.id.txtNoArticulos);
+        txtTotal = (TextView) v.findViewById(R.id.txtTotal);
 
         return v;
     }
@@ -116,9 +123,8 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
     @Override
     public void onResume() {
         bcv.resume();
-        if(Item!=null){
-            llenaRVA();
-        }
+        llenalista();
+        llenaRVA();
         super.onResume();
     }
 
@@ -146,9 +152,7 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
 
                 if(articulosCursor.getCount()>0){
                     saveVenta(articulosCursor);
-                    String[] projectionVenta = new String[] { "venta_name", "venta_desc", "venta_precio", "venta_foto"};
-                    Cursor ventaCursor = getContext().getContentResolver().query(venta.CONTENT_URI, projectionVenta, null, null, null);
-                    llenalista(ventaCursor);
+                    llenalista();
                     llenaRVA();
                 }else{
                     Toast.makeText(getContext(), "articulo no encontrado", Toast.LENGTH_LONG).show();
@@ -194,11 +198,16 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         list.setAdapter(new MyTiendaRVA(Item, TiendaFragment.this));
         list.setItemAnimator(new DefaultItemAnimator());
+        txtTotal.setText(getResources().getString(R.string.total_) + " " + total);
+        txtNoArticulos.setText(getResources().getString(R.string.no_articulos_) + " " + noArticulos);
     }
 
-    private void llenalista(Cursor ventaCursor) {
+    private void llenalista() {
+        String[] projectionVenta = new String[] { "venta_name", "venta_desc", "venta_precio", "venta_foto"};
+        Cursor ventaCursor = getContext().getContentResolver().query(venta.CONTENT_URI, projectionVenta, null, null, null);
         if(ventaCursor.getCount()>0){
             Item = new ArrayList();
+            total = 0;
             if(ventaCursor.moveToFirst()){
                 do{
                     Item.add(new itemListVenta(
@@ -206,8 +215,10 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
                             ventaCursor.getString(ventaCursor.getColumnIndex("venta_desc")),
                             ventaCursor.getDouble(ventaCursor.getColumnIndex("venta_precio")),
                             ventaCursor.getBlob(ventaCursor.getColumnIndex("venta_foto"))));
+                    total += ventaCursor.getDouble(ventaCursor.getColumnIndex("venta_precio"));
                 }while (ventaCursor.moveToNext());
             }
+            noArticulos = ventaCursor.getCount();
         }
     }
 
@@ -221,6 +232,8 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
             case R.id.btn_Limpiar:
                 final ContentResolver resolver = getContext().getContentResolver();
                 resolver.delete(venta.CONTENT_URI,null, null);
+                txtNoArticulos.setText(getResources().getString(R.string.no_articulos_));
+                txtTotal.setText(getResources().getString(R.string.total_));
                 Item = new ArrayList();
                 llenaRVA();
                 break;

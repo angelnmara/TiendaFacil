@@ -38,7 +38,7 @@
     <string name="edit">ACTUALIZA</string>
 
     <string name="total_">Total:</string>
-    <string name="articulos_">Numero de articulos:</string>
+    <string name="no_articulos_">Numero de articulos:</string>
 
 
 </resources>
