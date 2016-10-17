@@ -20,7 +20,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "TiendaFacilDB";
 
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     static SQLiteDatabase dbUse;
 

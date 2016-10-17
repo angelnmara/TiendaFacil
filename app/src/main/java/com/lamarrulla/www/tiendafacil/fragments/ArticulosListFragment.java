@@ -71,7 +71,7 @@ public class ArticulosListFragment extends Fragment implements MyArticulosRVA.On
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
+            String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock, article_marca_id" };
             Cursor ArticulosCursor =  getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, null, null, null);
             //genericContentJSON.getData();
             genericContentCursor.getData(ArticulosCursor, "itemListArticle");

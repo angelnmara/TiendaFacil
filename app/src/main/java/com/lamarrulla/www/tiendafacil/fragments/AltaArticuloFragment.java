@@ -63,6 +63,8 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
     private EditText txtPrecio;
     private EditText txtCosto;
     private EditText txtUnidades;
+    private EditText txtMarca;
+
     //private ImageView ImgProducto;
     private CardView btn_accept;
         private TextView txtBtnAcept;
@@ -112,6 +114,7 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         txtPrecio = (EditText) v.findViewById(R.id.txtPrecio);
         txtCosto = (EditText) v.findViewById(R.id.txtCosto);
         txtUnidades = (EditText) v.findViewById(R.id.txtUnidades);
+        txtMarca = (EditText) v.findViewById(R.id.txtMarca);
         txtBtnAcept = (TextView) v.findViewById(R.id.txtBtnAcept);
 
         ImgProducto = (ImageView) v.findViewById(R.id.ImgProducto);
@@ -222,7 +225,7 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
 
             values.put(article.ARTICLE_CODE, mParam1);
             values.put(article.ARTICLE_DESC, txtDescripcion.getText().toString());
-            values.put(article.ARTICLE_MARCA_ID, 1);
+            values.put(article.ARTICLE_MARCA_ID, txtMarca.getText().toString());
             values.put(article.ARTICLE_NAME, txtNombre.getText().toString());
             values.put(article.ARTICLE_PRECIO, txtPrecio.getText().toString());
             values.put(article.ARTICLE_COSTO, txtCosto.getText().toString());

@@ -142,7 +142,7 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
                 bcv.setStatusText("");
                 mBeepManager.playBeepSoundAndVibrate();
 
-                String[] projection = new String[] { "article_id", "article_code", "article_name", "article_desc", "article_precio", "article_costo", "article_foto", "article_stock" };
+                String[] projection = new String[] { "article_id", "article_code", "article_name", "article_desc", "article_precio", "article_costo", "article_foto", "article_stock, article_marca_id" };
                 String selection = "article_code = ?";
                 String[] selectionArgs = new String[] {result.toString()};
                 Cursor articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
@@ -186,6 +186,7 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
                     values.put(venta.VENTA_DESC, articulosCursor.getString(articulosCursor.getColumnIndex("article_desc")));
                     values.put(venta.VENTA_FOTO, articulosCursor.getBlob(articulosCursor.getColumnIndex("article_foto")));
                     values.put(venta.VENTA_NAME, articulosCursor.getString(articulosCursor.getColumnIndex("article_name")));
+                    values.put(venta.VENTA_MARCA_ID, articulosCursor.getInt(articulosCursor.getColumnIndex("article_marca_id")));
                 }while (articulosCursor.moveToNext());
                 resolver.insert(venta.CONTENT_URI, values);
             }
@@ -206,7 +207,7 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
     }
 
     private void llenalista() {
-        String[] projectionVenta = new String[] { "venta_name", "venta_desc", "venta_precio", "venta_foto", "marca_name"};
+        String[] projectionVenta = new String[] { "venta_name", "venta_desc", "venta_precio", "venta_foto, venta_marca_id"};
         Cursor ventaCursor = getContext().getContentResolver().query(venta_marca.CONTENT_URI, projectionVenta, null, null, null);
         if(ventaCursor.getCount()>0){
             Item = new ArrayList();
