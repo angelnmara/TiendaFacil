@@ -20,7 +20,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "TiendaFacilDB";
 
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     static SQLiteDatabase dbUse;
 
@@ -153,6 +153,8 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
                 .append(TipoDato.INT_KEY)
                 .append(MarcaColumns.MARCA_CODE)
                 .append(TipoDato.TEXT_)
+                .append(MarcaColumns.MARCA_IMAGEN)
+                .append(TipoDato.BLOB_)
                 .append(MarcaColumns.MARCA_NAME)
                 .append(TipoDato.TEXT_)
                 .append(MarcaColumns.MARCA_OTRO1)
@@ -175,6 +177,8 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
                 .append(TipoDato.TEXT_)
                 .append(VentaColumns.VENTA_DESC)
                 .append(TipoDato.TEXT_)
+                .append(VentaColumns.VENTA_MARCA_ID)
+                .append(TipoDato.INT_)
                 .append(VentaColumns.VENTA_PRECIO)
                 .append(TipoDato.DOUBLE_)
                 .append(VentaColumns.VENTA_FOTO)
@@ -190,5 +194,6 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
         static final String ARTICLE = "article";
         static final String VENTA = "venta";
         static final String MARCA = "marca";
+        static final String VENTA_MARCA = "venta_marca";
     }
 }

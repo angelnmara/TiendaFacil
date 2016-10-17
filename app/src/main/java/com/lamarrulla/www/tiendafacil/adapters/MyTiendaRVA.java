@@ -1,5 +1,7 @@
 package com.lamarrulla.www.tiendafacil.adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lamarrulla.www.tiendafacil.R;
-import com.lamarrulla.www.tiendafacil.listas.itemListArticle;
 import com.lamarrulla.www.tiendafacil.listas.itemListVenta;
 
 import java.util.List;
@@ -36,8 +37,15 @@ public class MyTiendaRVA extends RecyclerView.Adapter<MyTiendaRVA.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mItem = mItem.get(position);
-        holder.mIdView.setText(mItem.get(position).getVenta_name());
-        holder.mContentView.setText(mItem.get(position).getVenta_desc());
+        holder.txtProducto.setText(mItem.get(position).getVenta_name());
+        holder.txtDescripcion.setText(mItem.get(position).getVenta_desc());
+        holder.txtPrecio.setText(mItem.get(position).getVenta_precio().toString());
+        holder.txtMarca.setText(mItem.get(position).getVenta_marca());
+        byte[] btm = mItem.get(position).getVenta_foto();
+        if(btm!= null){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(btm, 0, btm.length);
+            holder.imgIcon.setImageBitmap(bitmap);
+        }
     }
 
     @Override
@@ -47,17 +55,23 @@ public class MyTiendaRVA extends RecyclerView.Adapter<MyTiendaRVA.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public itemListVenta mItem;
+        public final TextView txtId;
+        public final TextView txtProducto;
+        public final TextView txtDescripcion;
+        public final TextView txtMarca;
+        public final TextView txtPrecio;
         public ImageView imgIcon;
+        public itemListVenta mItem;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
-            mIdView = (TextView) itemView.findViewById(R.id.id);
-            mContentView = (TextView) itemView.findViewById(R.id.content);
+            txtId = (TextView) itemView.findViewById(R.id.txtId);
             imgIcon = (ImageView) itemView.findViewById(R.id.imgIcon);
+            txtProducto = (TextView) itemView.findViewById(R.id.txtProducto);
+            txtDescripcion = (TextView) itemView.findViewById(R.id.txtDescripcion);
+            txtMarca = (TextView) itemView.findViewById(R.id.txtMarca);
+            txtPrecio = (TextView) itemView.findViewById(R.id.txtPrecio);
         }
     }
 

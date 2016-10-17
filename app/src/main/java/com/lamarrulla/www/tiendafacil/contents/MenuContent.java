@@ -23,7 +23,7 @@ public class MenuContent {
      */
     public static final Map<String, MenuItem> ITEM_MAP = new HashMap<String, MenuItem>();
 
-    static String[] Menu = {"Inicio","Alta de artículos","Baja de artículos", "Cerrar sesión"};
+    static String[] Menu = {"Inicio","Alta de artículos","Alta de marca", "Cerrar sesión"};
 
     private static final int COUNT = Menu.length;
 

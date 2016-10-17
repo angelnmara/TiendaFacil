@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.StrictMode;
 import android.provider.BaseColumns;
+import android.support.design.widget.TabLayout;
 
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilDatabase.Tables;
 
@@ -19,6 +20,7 @@ public final class TiendaFacilContract {
     static final String PATH_ARTICLE = Tables.ARTICLE;
     static final String PATH_VENTA = Tables.VENTA;
     static final String PATH_MARCA = Tables.MARCA;
+    static final String PATH_VENTA_MARCA = Tables.VENTA_MARCA;
 
     private TiendaFacilContract(){}
 
@@ -93,6 +95,7 @@ public final class TiendaFacilContract {
         public static final String MARCA_ID = "marca_id";
         public static final String MARCA_NAME = "marca_name";
         public static final String MARCA_CODE = "marca_code";
+        public static final String MARCA_IMAGEN = "marca_imagen";
         public static final String MARCA_OTRO1 = "marca_otro1";
         public static final String MARCA_OTRO2 = "marca_otro2";
     }
@@ -102,8 +105,20 @@ public final class TiendaFacilContract {
         public static final String VENTA_CODE = "venta_code";
         public static final String VENTA_NAME = "venta_name";
         public static final String VENTA_DESC = "venta_desc";
+        public static final String VENTA_MARCA_ID = "venta_marca_id";
         public static final String VENTA_PRECIO = "venta_precio";
         public static final String VENTA_FOTO = "venta_foto";
+    }
+    interface VentaMarcaColumns extends BaseColumns{
+        public static final String VENTA_ID = "venta_id";
+        public static final String VENTA_CODE = "venta_code";
+        public static final String VENTA_NAME = "venta_name";
+        public static final String VENTA_DESC = "venta_desc";
+        public static final String VENTA_MARCA_ID = "venta_marca_id";
+        public static final String VENTA_PRECIO = "venta_precio";
+        public static final String VENTA_FOTO = "venta_foto";
+        public static final String MARCA_ID = "marca_id";
+        public static final String MARCA_NAME = "marca_name";
     }
 
     interface TipoDato extends BaseColumns{
@@ -160,6 +175,21 @@ public final class TiendaFacilContract {
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.MARCA;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.MARCA;
         public static final String DEFAULT_SORT = MarcaColumns.MARCA_ID + " COLLATE NOCASE ASC";
+
+        public static Uri buildMarcaUri(String VentaId){
+            return CONTENT_URI.buildUpon().appendPath(MARCA_ID).build();
+        }
+
+        public static String getMarcaId(Uri uri){
+            return uri.getLastPathSegment();
+        }
+    }
+
+    public static abstract class venta_marca implements VentaMarcaColumns{
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_VENTA_MARCA).build();
+        public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.VENTA_MARCA;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.VENTA_MARCA;
+        public static final String DEFAULT_SORT = VentaMarcaColumns.MARCA_ID + " COLLATE NOCASE ASC";
 
         public static Uri buildMarcaUri(String VentaId){
             return CONTENT_URI.buildUpon().appendPath(MARCA_ID).build();

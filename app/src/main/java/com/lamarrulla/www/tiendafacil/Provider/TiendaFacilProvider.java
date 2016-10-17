@@ -18,10 +18,12 @@ import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.ArticleColumn
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.UserColumns;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.VentaColumns;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.MarcaColumns;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.VentaMarcaColumns;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.article;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.user;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.venta;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.marca;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.venta_marca;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilDatabase.Tables;
 
 import java.util.ArrayList;
@@ -45,6 +47,8 @@ public class TiendaFacilProvider extends ContentProvider {
     private static final int CODE_ALL_MARCA = 7;
     private static final int CODE_SINGLE_MARCA = 8;
 
+    private static final int CODE_ALL_VENTA_MARCA = 9;
+    private static final int CODE_SINGLE_VENTA_MARCA = 10;
 
     private Context context;
     private static TiendaFacilDatabase mOpenHelper;
@@ -65,6 +69,9 @@ public class TiendaFacilProvider extends ContentProvider {
 
         matcher.addURI(authority, TiendaFacilContract.PATH_MARCA, CODE_ALL_MARCA);
         matcher.addURI(authority, TiendaFacilContract.PATH_MARCA + "/#", CODE_SINGLE_MARCA);
+
+        matcher.addURI(authority, TiendaFacilContract.PATH_VENTA_MARCA, CODE_ALL_VENTA_MARCA);
+        matcher.addURI(authority, TiendaFacilContract.PATH_VENTA_MARCA + "/#", CODE_SINGLE_VENTA_MARCA);
 
         return matcher;
     }
@@ -136,6 +143,15 @@ public class TiendaFacilProvider extends ContentProvider {
                 queryBuilder.setTables(Tables.MARCA);
                 break;
 
+            case CODE_ALL_VENTA_MARCA:
+                queryBuilder.setTables("venta inner join marca on venta.venta_marca_id = marca.marca_id");
+                break;
+
+            case CODE_SINGLE_VENTA_MARCA:
+                Id = venta_marca.getMarcaId(uri);
+                queryBuilder.appendWhere(VentaMarcaColumns._ID + "=" + Id);
+                break;
+
             default:
                 Log.d(TAG, "Opcion no valida");
         }
@@ -156,6 +172,10 @@ public class TiendaFacilProvider extends ContentProvider {
                     break;
 
                 case CODE_ALL_MARCA:
+                    sortOrder = marca.DEFAULT_SORT;
+                    break;
+
+                case CODE_ALL_VENTA_MARCA:
                     sortOrder = marca.DEFAULT_SORT;
                     break;
             }

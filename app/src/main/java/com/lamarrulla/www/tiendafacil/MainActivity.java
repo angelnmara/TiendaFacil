@@ -32,6 +32,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.lamarrulla.www.tiendafacil.adapters.MyMenuRVA;
 import com.lamarrulla.www.tiendafacil.contents.MenuContent;
 import com.lamarrulla.www.tiendafacil.fragments.AltaArticuloFragment;
+import com.lamarrulla.www.tiendafacil.fragments.AltaMarcaFragment;
 import com.lamarrulla.www.tiendafacil.fragments.PrincipalFragment;
 import com.lamarrulla.www.tiendafacil.utils.getBitmap;
 
@@ -180,18 +181,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentM(String id) {
         switch (id){
-            case "0":
+            case "0":   // Principal Fragment
                 limpiaFragments();
                 Fragment PF = PrincipalFragment.newInstance("", "");
                 gfm.beginTransaction().replace(R.id.lnlContent, PF, "PrincipalFragment").commit();
                 break;
-            case "1":
+            case "1":   // Alta Articulo
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
                     Toast.makeText(this, "No existe permiso", Toast.LENGTH_SHORT).show();
                     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
                 }else {
                     lanzaCamara();
                 }
+                break;
+            case "2":   // Alta marca
+                Fragment AMF = AltaMarcaFragment.newInstance("", "");
+                gfm.beginTransaction().replace(R.id.lnlContent, AMF, "AltaMarcaFragment").commit();
                 break;
             default:
                 Toast.makeText(this, getResources().getString(R.string.MsjOpcionInvalida), Toast.LENGTH_SHORT).show();

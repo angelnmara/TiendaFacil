@@ -28,6 +28,7 @@ import com.lamarrulla.www.tiendafacil.listas.itemListVenta;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.venta;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.venta_marca;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,16 +196,18 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
     }
 
     private void llenaRVA() {
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
-        list.setAdapter(new MyTiendaRVA(Item, TiendaFragment.this));
-        list.setItemAnimator(new DefaultItemAnimator());
-        txtTotal.setText(getResources().getString(R.string.total_) + " " + total);
-        txtNoArticulos.setText(getResources().getString(R.string.no_articulos_) + " " + noArticulos);
+        if(Item!=null){
+            list.setLayoutManager(new LinearLayoutManager(getContext()));
+            list.setAdapter(new MyTiendaRVA(Item, TiendaFragment.this));
+            list.setItemAnimator(new DefaultItemAnimator());
+            txtTotal.setText(getResources().getString(R.string.total_) + " " + total);
+            txtNoArticulos.setText(getResources().getString(R.string.no_articulos_) + " " + noArticulos);
+        }
     }
 
     private void llenalista() {
-        String[] projectionVenta = new String[] { "venta_name", "venta_desc", "venta_precio", "venta_foto"};
-        Cursor ventaCursor = getContext().getContentResolver().query(venta.CONTENT_URI, projectionVenta, null, null, null);
+        String[] projectionVenta = new String[] { "venta_name", "venta_desc", "venta_precio", "venta_foto", "marca_name"};
+        Cursor ventaCursor = getContext().getContentResolver().query(venta_marca.CONTENT_URI, projectionVenta, null, null, null);
         if(ventaCursor.getCount()>0){
             Item = new ArrayList();
             total = 0;
@@ -214,6 +217,8 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
                             ventaCursor.getString(ventaCursor.getColumnIndex("venta_name")),
                             ventaCursor.getString(ventaCursor.getColumnIndex("venta_desc")),
                             ventaCursor.getDouble(ventaCursor.getColumnIndex("venta_precio")),
+                            "Marca",
+                            //ventaCursor.getString(ventaCursor.getColumnIndex("venta_marca")),
                             ventaCursor.getBlob(ventaCursor.getColumnIndex("venta_foto"))));
                     total += ventaCursor.getDouble(ventaCursor.getColumnIndex("venta_precio"));
                 }while (ventaCursor.moveToNext());

@@ -1,26 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+              android:layout_margin="5dp"
+              android:weightSum="5">
 
     <TextView
-        android:id="@+id/id"
+        android:id="@+id/txtId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" android:visibility="gone"/>
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:visibility="gone"/>
 
-    <ImageView android:layout_width="20dp"
-        android:layout_height="20dp" android:id="@+id/imgIcon"
-        android:src="@drawable/ic_inicio" android:layout_margin="16dp"/>
+    <ImageView android:layout_width="match_parent"
+               android:layout_height="fill_parent"
+               android:id="@+id/imgIcon"
+               android:src="@drawable/ic_inicio"
+               android:layout_weight="2"
+               android:layout_margin="5dp"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="fill_parent"
+                  android:layout_weight="1"
+                  android:orientation="vertical"
+                  android:layout_margin="5dp">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txtProducto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:layout_marginRight="5dp"
+                android:text="Producto"/>
+
+            <TextView
+                android:id="@+id/txtDescripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:text="Descripcion"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtMarca"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:text="Marca"/>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_gravity="center"
+        android:id="@+id/txtPrecio"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_marginLeft="16dp"
-        android:text="Inicio"/>
+        android:layout_weight="2"
+        android:layout_margin="5dp"
+        android:text="Precio"/>
 
 </LinearLayout>
