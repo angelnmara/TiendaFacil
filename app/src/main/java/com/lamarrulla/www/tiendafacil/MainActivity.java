@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case "2":   // Alta marca
                 Fragment AMF = AltaMarcaFragment.newInstance("", "");
-                gfm.beginTransaction().replace(R.id.lnlContent, AMF, "AltaMarcaFragment").commit();
+                gfm.beginTransaction().replace(R.id.lnlContent, AMF, "AltaMarcaFragment").addToBackStack("AltaMarcaFragment").commit();
                 break;
             default:
                 Toast.makeText(this, getResources().getString(R.string.MsjOpcionInvalida), Toast.LENGTH_SHORT).show();

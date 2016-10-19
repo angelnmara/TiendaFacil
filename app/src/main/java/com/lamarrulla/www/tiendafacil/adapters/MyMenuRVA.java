@@ -8,21 +8,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lamarrulla.www.tiendafacil.R;
-import com.lamarrulla.www.tiendafacil.contents.MenuContent.MenuItem;
+import com.lamarrulla.www.tiendafacil.listas.itemListMenu;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link MenuItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link itemListMenu} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class MyMenuRVA extends RecyclerView.Adapter<MyMenuRVA.ViewHolder> {
 
-    private final List<MenuItem> mValues;
+    private final List<itemListMenu> mValues;
     private final OnListFragmentMenu mListener;
 
-    public MyMenuRVA(List<MenuItem> items, OnListFragmentMenu listener) {
+    public MyMenuRVA(List<itemListMenu> items, OnListFragmentMenu listener) {
         mValues = items;
         mListener = listener;
     }
@@ -30,7 +30,7 @@ public class MyMenuRVA extends RecyclerView.Adapter<MyMenuRVA.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_menu, parent, false);
+                .inflate(R.layout.fragment_list_menu, parent, false);
         return new ViewHolder(view);
     }
 
@@ -78,7 +78,7 @@ public class MyMenuRVA extends RecyclerView.Adapter<MyMenuRVA.ViewHolder> {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public MenuItem mItem;
+        public itemListMenu mItem;
         public ImageView imgIcon;
 
         public ViewHolder(View view) {

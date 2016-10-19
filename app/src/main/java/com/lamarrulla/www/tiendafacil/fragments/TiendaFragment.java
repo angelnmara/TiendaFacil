@@ -218,7 +218,7 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
                             ventaCursor.getString(ventaCursor.getColumnIndex("venta_name")),
                             ventaCursor.getString(ventaCursor.getColumnIndex("venta_desc")),
                             ventaCursor.getDouble(ventaCursor.getColumnIndex("venta_precio")),
-                            "Marca",
+                            "1",
                             //ventaCursor.getString(ventaCursor.getColumnIndex("venta_marca")),
                             ventaCursor.getBlob(ventaCursor.getColumnIndex("venta_foto"))));
                     total += ventaCursor.getDouble(ventaCursor.getColumnIndex("venta_precio"));

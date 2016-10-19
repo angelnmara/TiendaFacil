@@ -3,10 +3,12 @@ package com.lamarrulla.www.tiendafacil.fragments;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,9 @@ import android.widget.Toast;
 
 import com.lamarrulla.www.tiendafacil.R;
 /*import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;*/
+import com.lamarrulla.www.tiendafacil.adapters.MyMarcasRVA;
+import com.lamarrulla.www.tiendafacil.contents.genericContentCursor;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.marca;
 
 /**
@@ -25,7 +30,7 @@ import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.marca;
  * Use the {@link AltaMarcaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AltaMarcaFragment extends Fragment implements View.OnClickListener {
+public class AltaMarcaFragment extends Fragment implements View.OnClickListener, MyMarcasRVA.OnListFragmentMarca {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,6 +43,8 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener 
     private CardView btn_accept;
     private EditText txtMarca;
     private EditText txtCodigo;
+    private RecyclerView list;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -80,6 +87,16 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener 
         btn_accept = (CardView) v.findViewById(R.id.btn_accept);
         txtMarca = (EditText) v.findViewById(R.id.txtMarca);
         txtCodigo = (EditText) v.findViewById(R.id.txtCodigo);
+        list = (RecyclerView) v.findViewById(R.id.list);
+        list.setHasFixedSize(true);
+        list.setLayoutManager(mLayoutManager);
+
+        String[] projection = new String[] { "marca_id", "marca_code", "marca_name", "marca_imagen" };
+        Cursor MarcaCursor =  getContext().getContentResolver().query(TiendaFacilContract.marca.CONTENT_URI, projection, null, null, null);
+        genericContentCursor.getData(MarcaCursor, "itemListMarca");
+
+        list.setAdapter(new MyMarcasRVA(genericContentCursor.Item, AltaMarcaFragment.this));
+
 
         btn_accept.setOnClickListener(this);
 
@@ -108,6 +125,11 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener 
 
         Toast.makeText(getContext(), "Id de la marca insertada" + newUri, Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public void onListFragmentMar(int id) {
+        Toast.makeText(getContext(), "Clicl lista", Toast.LENGTH_SHORT).show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -1,5 +1,7 @@
 package com.lamarrulla.www.tiendafacil.contents;
 
+import com.lamarrulla.www.tiendafacil.listas.itemListMenu;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,12 +18,12 @@ public class MenuContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<MenuItem> ITEMS = new ArrayList<MenuItem>();
+    public static final List<itemListMenu> ITEMS = new ArrayList<itemListMenu>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, MenuItem> ITEM_MAP = new HashMap<String, MenuItem>();
+    public static final Map<String, itemListMenu> ITEM_MAP = new HashMap<String, itemListMenu>();
 
     static String[] Menu = {"Inicio","Alta de artículos","Alta de marca", "Cerrar sesión"};
 
@@ -34,13 +36,13 @@ public class MenuContent {
         }
     }
 
-    private static void addItem(MenuItem item) {
+    private static void addItem(itemListMenu item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
     }
 
-    private static MenuItem createDummyItem(int position) {
-        return new MenuItem(String.valueOf(position), Menu[position].toString(), makeDetails(position));
+    private static itemListMenu createDummyItem(int position) {
+        return new itemListMenu(String.valueOf(position), Menu[position].toString(), makeDetails(position));
     }
 
     private static String makeDetails(int position) {
@@ -55,12 +57,12 @@ public class MenuContent {
     /**
      * A dummy item representing a piece of content.
      */
-    public static class MenuItem {
+    /*public static class itemListMenu {
         public final String id;
         public final String content;
         public final String details;
 
-        public MenuItem(String id, String content, String details) {
+        public itemListMenu(String id, String content, String details) {
             this.id = id;
             this.content = content;
             this.details = details;
@@ -70,5 +72,5 @@ public class MenuContent {
         public String toString() {
             return content;
         }
-    }
+    }*/
 }

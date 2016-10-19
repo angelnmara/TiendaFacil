@@ -3,6 +3,7 @@ package com.lamarrulla.www.tiendafacil.contents;
 import android.database.Cursor;
 
 import com.lamarrulla.www.tiendafacil.listas.itemListArticle;
+import com.lamarrulla.www.tiendafacil.listas.itemListMarca;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,12 @@ public class genericContentCursor {
                                 cursor.getDouble(cursor.getColumnIndex("article_costo")),
                                 cursor.getBlob(cursor.getColumnIndex("article_foto")),
                                 cursor.getInt(cursor.getColumnIndex("article_stock"))));
+                        break;
+                    case"itemListMarca":
+                        Item.add(new itemListMarca(cursor.getInt(cursor.getColumnIndex("marca_id")),
+                                cursor.getString(cursor.getColumnIndex("marca_code")),
+                                cursor.getString(cursor.getColumnIndex("marca_name")),
+                                cursor.getBlob(cursor.getColumnIndex("marca_imagen"))));
                         break;
                     default:
                         break;
