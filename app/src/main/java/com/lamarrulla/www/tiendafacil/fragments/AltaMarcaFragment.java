@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,8 +89,11 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
         btn_accept = (CardView) v.findViewById(R.id.btn_accept);
         txtMarca = (EditText) v.findViewById(R.id.txtMarca);
         txtCodigo = (EditText) v.findViewById(R.id.txtCodigo);
+
         list = (RecyclerView) v.findViewById(R.id.list);
+
         list.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(mLayoutManager);
 
         String[] projection = new String[] { "marca_id", "marca_code", "marca_name", "marca_imagen" };
