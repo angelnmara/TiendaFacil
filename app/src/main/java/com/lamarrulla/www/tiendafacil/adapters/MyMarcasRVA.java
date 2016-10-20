@@ -30,11 +30,12 @@ public class MyMarcasRVA extends RecyclerView.Adapter<VHMarca> {
     @Override
     public VHMarca onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_list_marca, parent, false);
-        return new VHMarca(v);
+        VHMarca vhm = new VHMarca(v);
+        return vhm;
     }
 
     @Override
-    public void onBindViewHolder(VHMarca holder, final int position) {
+    public void onBindViewHolder(final VHMarca holder, final int position) {
         holder.mItem = mValues.get(position);
         holder.txtMarcaId.setText(mValues.get(position).getMarca_id());
         holder.txtMarca.setText(mValues.get(position).getMarca_name());

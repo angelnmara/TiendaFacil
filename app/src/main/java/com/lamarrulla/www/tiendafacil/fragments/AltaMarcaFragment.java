@@ -44,6 +44,7 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
     private EditText txtMarca;
     private EditText txtCodigo;
     private RecyclerView list;
+    private RecyclerView.Adapter AdapterMarca;
     private RecyclerView.LayoutManager mLayoutManager;
 
     //private OnFragmentInteractionListener mListener;
@@ -94,8 +95,10 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
         String[] projection = new String[] { "marca_id", "marca_code", "marca_name", "marca_imagen" };
         Cursor MarcaCursor =  getContext().getContentResolver().query(TiendaFacilContract.marca.CONTENT_URI, projection, null, null, null);
         genericContentCursor.getData(MarcaCursor, "itemListMarca");
+        AdapterMarca = new MyMarcasRVA(genericContentCursor.Item, AltaMarcaFragment.this);
 
-        list.setAdapter(new MyMarcasRVA(genericContentCursor.Item, AltaMarcaFragment.this));
+
+        list.setAdapter(AdapterMarca);
 
 
         btn_accept.setOnClickListener(this);
