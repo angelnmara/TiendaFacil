@@ -1,5 +1,6 @@
 package com.lamarrulla.www.tiendafacil.ViewHolder;
 
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +21,8 @@ public class VHMarca extends RecyclerView.ViewHolder {
     public final TextView txtMarca;
     public final TextView txtCodigoMarca;
     public final ImageView imgMarca;
+    public final ImageView imgEdita;
+    public final ImageView imgElimina;
 
     public VHMarca(View itemView) {
         super(itemView);
@@ -28,5 +31,7 @@ public class VHMarca extends RecyclerView.ViewHolder {
         txtMarca = (TextView) itemView.findViewById(R.id.txtMarca);
         txtCodigoMarca = (TextView) itemView.findViewById(R.id.txtCodigoMarca);
         imgMarca = (ImageView) itemView.findViewById(R.id.imgMarca);
+        imgEdita = (ImageView) itemView.findViewById(R.id.imgEdita);
+        imgElimina = (ImageView) itemView.findViewById(R.id.imgElimina);
     }
 }

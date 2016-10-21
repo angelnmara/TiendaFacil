@@ -15,9 +15,15 @@
     <string name="total">Total</string>
     <string name="limpiar">Limpiar</string>
 
-    mensajes
+    <!--mensajes--> <!--Errores-->
+
     <string name="MsjOpcionInvalida">Opcion invalida</string>
     <string name="msjArticuloNoInsertado">El articulo no se inserto correctamente</string>
+    <string name="msjMarcaReq">La marca es requerida</string>
+    <string name="msjCodigoReq">El código es requerido</string>
+    <string name="msjRegistroIns">El registro se inserto correctamente con el id: </string>
+    <string name="msjRegistroElim">Se eliminaron %1$s registros</string>
+    <string name="msjRegistroAct">Se actualizaron %1$s registros</string>
 
 
     <string name="title_activity_login">Sign in</string>

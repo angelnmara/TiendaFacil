@@ -2,27 +2,48 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content" android:weightSum="4">
 
-    <ImageView android:layout_width="60dp" android:layout_height="60dp"
-               android:id="@+id/imgMarca" android:layout_margin="16dp"/>
+    <ImageView android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:id="@+id/imgMarca"
+               android:visibility="gone"/>
 
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="idMarca"
               android:id="@+id/txtMarcaId"
-              android:layout_margin="16dp" android:layout_gravity="center"/>
+              android:layout_margin="16dp"
+              android:layout_gravity="center"
+              android:visibility="gone"/>
 
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
+    <TextView android:layout_width="match_parent"
+              android:layout_height="fill_parent"
               android:text="Marca"
               android:id="@+id/txtMarca"
-              android:layout_margin="16dp" android:layout_gravity="center"/>
+              android:gravity="center_vertical"
+              android:layout_marginLeft="16dp"
+              android:layout_weight="1"/>
 
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
+    <TextView android:layout_width="match_parent"
+              android:layout_height="fill_parent"
               android:text="Codigo"
               android:id="@+id/txtCodigoMarca"
-              android:layout_margin="16dp" android:layout_gravity="center"/>
+              android:gravity="center_vertical"
+              android:layout_weight="1"/>
+
+    <ImageView android:layout_width="match_parent"
+               android:layout_height="20dp"
+               android:id="@+id/imgEdita"
+               android:src="@drawable/ic_editar"
+               android:layout_margin="5dp"
+               android:layout_gravity="center" android:layout_weight="1"/>
+
+    <ImageView android:layout_width="match_parent"
+               android:layout_height="20dp"
+               android:id="@+id/imgElimina"
+               android:src="@drawable/ic_basura"
+               android:layout_margin="5dp"
+               android:layout_gravity="center" android:layout_weight="1"/>
 
 </LinearLayout>

@@ -2,24 +2,30 @@ package com.lamarrulla.www.tiendafacil.fragments;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.lamarrulla.www.tiendafacil.R;
 /*import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;*/
 import com.lamarrulla.www.tiendafacil.adapters.MyMarcasRVA;
 import com.lamarrulla.www.tiendafacil.contents.genericContentCursor;
+import com.lamarrulla.www.tiendafacil.dialogs.GenericDilog;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.marca;
 
@@ -36,6 +42,7 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = "AltaMarcaFragment";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -43,10 +50,21 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
 
     private CardView btn_accept;
     private EditText txtMarca;
+    private TextInputLayout textinputMarca;
+    private TextView txtBtnAcept;
+
     private EditText txtCodigo;
+    private TextInputLayout textinputCodigo;
+
     private RecyclerView list;
     private RecyclerView.Adapter AdapterMarca;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    boolean edit = false;
+    String MarcaEdit = "";
+    int MarcaEditId = 0;
+
+    View focusView = null;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -87,28 +105,36 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
 
         View v = inflater.inflate(R.layout.fragment_alta_marca, container, false);
         btn_accept = (CardView) v.findViewById(R.id.btn_accept);
+
         txtMarca = (EditText) v.findViewById(R.id.txtMarca);
+        textinputMarca = (TextInputLayout) v.findViewById(R.id.textinputMarca);
+
         txtCodigo = (EditText) v.findViewById(R.id.txtCodigo);
+        textinputCodigo = (TextInputLayout) v.findViewById(R.id.textinputCodigo);
+
+        txtBtnAcept = (TextView) v.findViewById(R.id.txtBtnAcept);
 
         list = (RecyclerView) v.findViewById(R.id.list);
 
-        list.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        list.setLayoutManager(mLayoutManager);
-
-        String[] projection = new String[] { "marca_id", "marca_code", "marca_name", "marca_imagen" };
-        Cursor MarcaCursor =  getContext().getContentResolver().query(TiendaFacilContract.marca.CONTENT_URI, projection, null, null, null);
-        genericContentCursor.getData(MarcaCursor, "itemListMarca");
-        AdapterMarca = new MyMarcasRVA(genericContentCursor.Item, AltaMarcaFragment.this);
-
-
-        list.setAdapter(AdapterMarca);
-
+        cargaTablaMarca();
 
         btn_accept.setOnClickListener(this);
 
         // Inflate the layout for this fragment
         return v;
+    }
+
+    private void cargaTablaMarca() {
+        list.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        list.setLayoutManager(mLayoutManager);
+        String[] projection = new String[] { "marca_id", "marca_code", "marca_name", "marca_imagen" };
+        Cursor MarcaCursor =  getContext().getContentResolver().query(TiendaFacilContract.marca.CONTENT_URI, projection, null, null, null);
+        genericContentCursor.getData(MarcaCursor, "itemListMarca");
+        AdapterMarca = new MyMarcasRVA(genericContentCursor.Item, AltaMarcaFragment.this);
+        list.setAdapter(AdapterMarca);
+        txtCodigo.setText("");
+        txtMarca.setText("");
     }
 
     @Override
@@ -125,56 +151,139 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
         final ContentResolver resolver = getContext().getContentResolver();
         final ContentValues values = new ContentValues();
 
+        if (txtMarca.length()==0){
+            textinputMarca.setError(getString(R.string.msjMarcaReq));
+            requestFocus(txtMarca);
+            return;
+        }
+
+        /*if(txtCodigo.length()==0){
+            textinputCodigo.setError(getString(R.string.msjCodigoReq));
+            requestFocus(txtCodigo);
+            return;
+        }*/
+
+        if(edit == false){
+
+            /*inserta*/
+
+            values.put(marca.MARCA_NAME, txtMarca.getText().toString());
+            values.put(marca.MARCA_CODE, txtCodigo.getText().toString());
+            final Uri newUri = resolver.insert(marca.CONTENT_URI, values);
+            Intent i = new Intent(getContext(), GenericDilog.class);
+            String marca = TiendaFacilContract.article.getArticleId(newUri).toString();
+            i.putExtra("message", "El registro se inserto correctamente con el id: " + marca);
+            startActivity(i);
+
+            cargaTablaMarca();
+
+        }else{
+            ConfirmEditMarca();
+        }
+
+        requestFocus(txtMarca);
+
+    }
+
+    private void ConfirmEditMarca() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AppCompatAlertDialogStyle);
+        builder.setTitle("Edita Marca");
+        builder.setMessage("Desea editar la marca?");
+        builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditMarca(MarcaEditId);
+            }
+        });
+        builder.setNegativeButton("Cancelar", null);
+        builder.show();
+    }
+
+    /*@Override
+    public void onListFragmentMar(int id) {
+
+    }*/
+
+    private void EditMarca(int id){
+        final ContentResolver resolver = getContext().getContentResolver();
+        final ContentValues values = new ContentValues();
+
         values.put(marca.MARCA_NAME, txtMarca.getText().toString());
         values.put(marca.MARCA_CODE, txtCodigo.getText().toString());
 
-        final Uri newUri = resolver.insert(marca.CONTENT_URI, values);
+        String selection = "marca_id =?";
+        String[] selectionArgs = new String[] {String.valueOf(id)};
 
-        Toast.makeText(getContext(), "Id de la marca insertada" + newUri, Toast.LENGTH_SHORT).show();
+        Integer actualizados = resolver.update(marca.CONTENT_URI, values, selection, selectionArgs);
 
+        Intent i = new Intent(getContext(), GenericDilog.class);
+        //i.putExtra("isOk", true);
+        i.putExtra("message", String.format(getString(R.string.msjRegistroAct), String.valueOf(actualizados)));
+        startActivity(i);
+
+        cargaTablaMarca();
+
+        edit = false;
+        txtBtnAcept.setText(getString(R.string.accept));
+
+    }
+
+    private void deleteMarca(String id) {
+        Log.d(TAG, "Elimina marca");
+        final ContentResolver resolver = getContext().getContentResolver();
+        String where = "marca_id =?";
+        String[] idS = new String[]{id};
+        int ArticulosEliminados  = resolver.delete(marca.CONTENT_URI, where, idS);
+
+        Intent i = new Intent(getContext(), GenericDilog.class);
+        //i.putExtra("isOk", true);
+        i.putExtra("message", String.format(getString(R.string.msjRegistroElim), String.valueOf(ArticulosEliminados)));
+        startActivity(i);
+
+        cargaTablaMarca();
+
+    }
+
+    private void requestFocus(View view){
+        if(view.requestFocus()){
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 
     @Override
-    public void onListFragmentMar(int id) {
-        Toast.makeText(getContext(), "Clicl lista", Toast.LENGTH_SHORT).show();
+    public void onListEdit(int id) {
+        String[] projection = new String[] { "marca_id", "marca_code", "marca_name", "marca_imagen" };
+        String where = "marca_id =?";
+        String[] vals = new String[]{String.valueOf(id)};
+        Cursor MarcaCursor =  getContext().getContentResolver().query(TiendaFacilContract.marca.CONTENT_URI, projection, where, vals, null);
+
+        if(MarcaCursor.moveToFirst()){
+            do{
+                MarcaEdit = MarcaCursor.getString(MarcaCursor.getColumnIndex("marca_name"));
+                MarcaEditId = MarcaCursor.getInt(MarcaCursor.getColumnIndex("marca_id"));
+                txtMarca.setText(MarcaEdit);
+                txtCodigo.setText(MarcaCursor.getString(MarcaCursor.getColumnIndex("marca_code")));
+            }while (MarcaCursor.moveToNext());
+        }
+        edit = true;
+        txtBtnAcept.setText(getString(R.string.edit));
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    /*public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }*/
+    @Override
+    public void onListElimina(final int id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AppCompatAlertDialogStyle);
+        builder.setTitle("Elimina Marca");
+        builder.setMessage("Desea eliminar la marca?");
+        builder.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteMarca(String.valueOf(id));
+            }
+        });
+        builder.setNegativeButton("Cancelar", null);
+        builder.show();
 
-    /*@Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }*/
+        cargaTablaMarca();
 
-    /*@Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    /*public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }*/
+    }
 }
