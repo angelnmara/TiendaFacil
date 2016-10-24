@@ -60,7 +60,7 @@ public class ArticulosListFragment extends Fragment implements MyArticulosRVA.On
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_articulos, container, false);
+        View view = inflater.inflate(R.layout.fragment_rv_articulos, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {

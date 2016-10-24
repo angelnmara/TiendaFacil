@@ -28,7 +28,8 @@ public class genericContentCursor {
                                 cursor.getDouble(cursor.getColumnIndex("article_precio")),
                                 cursor.getDouble(cursor.getColumnIndex("article_costo")),
                                 cursor.getBlob(cursor.getColumnIndex("article_foto")),
-                                cursor.getInt(cursor.getColumnIndex("article_stock"))));
+                                cursor.getInt(cursor.getColumnIndex("article_stock")),
+                                cursor.getInt(cursor.getColumnIndex("article_marca_id"))));
                         break;
                     case"itemListMarca":
                         Item.add(new itemListMarca(cursor.getInt(cursor.getColumnIndex("marca_id")),

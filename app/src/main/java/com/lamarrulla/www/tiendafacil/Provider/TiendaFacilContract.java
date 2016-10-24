@@ -136,6 +136,8 @@ public final class TiendaFacilContract {
         public static final String DATETIME_ = " NUMERIC,";
         public static final String DATETIME = " NUMERIC";
         public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS ";
+        public static final String PRIMARY_KEY_ = " PRIMARY KEY,";
+        public static final String PRIMARY_KEY = " PRIMARY KEY";
     }
 
     public static abstract class user implements UserColumns{

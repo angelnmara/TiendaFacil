@@ -3,6 +3,7 @@
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,10 +13,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,13 +29,16 @@ import android.widget.Toast;
 import com.lamarrulla.www.tiendafacil.MainActivity;
 import com.lamarrulla.www.tiendafacil.R;
 import com.lamarrulla.www.tiendafacil.dialogs.GenericDilog;
+import com.lamarrulla.www.tiendafacil.listas.itemListMarca;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.article;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.w3c.dom.Text;
 
 import java.security.PrivateKey;
+import java.util.ArrayList;
 
     /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +53,8 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+        private static final String TAG = "AltaArticuloFragment";
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public static ImageView ImgProducto;
@@ -64,10 +74,18 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
     private EditText txtCosto;
     private EditText txtUnidades;
     private EditText txtMarca;
+        private MaterialBetterSpinner ddlMarca;
+
+
+        private boolean ArticleEliminado = false;
 
     //private ImageView ImgProducto;
     private CardView btn_accept;
+        private CardView btn_eliminar;
+
         private TextView txtBtnAcept;
+
+        private Cursor articulosCursor;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -114,21 +132,31 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         txtPrecio = (EditText) v.findViewById(R.id.txtPrecio);
         txtCosto = (EditText) v.findViewById(R.id.txtCosto);
         txtUnidades = (EditText) v.findViewById(R.id.txtUnidades);
+
         txtMarca = (EditText) v.findViewById(R.id.txtMarca);
+        ddlMarca = (MaterialBetterSpinner) v.findViewById(R.id.ddlMarca);
+
         txtBtnAcept = (TextView) v.findViewById(R.id.txtBtnAcept);
+        btn_eliminar = (CardView) v.findViewById(R.id.btn_eliminar);
 
         ImgProducto = (ImageView) v.findViewById(R.id.ImgProducto);
 
         btn_accept = (CardView) v.findViewById(R.id.btn_accept);
         btn_accept.setOnClickListener(this);
+        btn_eliminar.setOnClickListener(this);
 
         MainActivity.fab.setImageResource(R.drawable.ic_menu_camera);
         ImgProducto.setOnClickListener(this);
 
-        String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock" };
-        String selection = "article_code = ?";
-        String[] selectionArgs = new String[] {mParam1};
-        Cursor articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getContext(),
+                R.layout.ddl_marca,
+                getAllMarcas(),
+                new String[]{"marca_id", "marca_name"},
+                new int[]{R.id.txtMarcaId, R.id.txtMarca});
+
+        ddlMarca.setAdapter(adapter);
+
+        fillarticulosCursor();
 
         if(articulosCursor.getCount()>0){
             codigoExiste = true;
@@ -141,7 +169,20 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         return v;
     }
 
-    private void llenaPantalla(Cursor articulosCursor) {
+        private Cursor getAllMarcas() {
+            String[] projection = new String[] { "marca_id", "marca_name"};
+            Cursor cursor = getContext().getContentResolver().query(TiendaFacilContract.marca.CONTENT_URI, projection, null, null, null);
+            return cursor;
+        }
+
+        private void fillarticulosCursor() {
+            String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock, article_marca_id" };
+            String selection = "article_code = ?";
+            String[] selectionArgs = new String[] {mParam1};
+            articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
+        }
+
+        private void llenaPantalla(Cursor articulosCursor) {
         if(articulosCursor.moveToFirst()){
             do{
                 txtNombre.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_name")));
@@ -149,12 +190,14 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
                 txtCosto.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_costo")));
                 txtDescripcion.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_desc")));
                 txtPrecio.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_precio")));
+                txtMarca.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_marca_id")));
                 byte[] btm = articulosCursor.getBlob(articulosCursor.getColumnIndex("article_foto"));
                 if (btm != null){
                     Bitmap bitmap = BitmapFactory.decodeByteArray(btm, 0, btm.length);
                     ImgProducto.setImageBitmap(bitmap);
                 }
                 txtBtnAcept.setText(getResources().getString(R.string.edit));
+                btn_eliminar.setVisibility(View.VISIBLE);
             }while (articulosCursor.moveToNext());
         }
     }
@@ -175,11 +218,46 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
                     saveArticle();
                 }
                 break;
+            case R.id.btn_eliminar:
+                Log.d(TAG, "Entra a eliminar registro");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AppCompatAlertDialogStyle);
+                builder.setTitle(getString(R.string.msjEliminarArticulo));
+                builder.setMessage(getString(R.string.msjDeseasElimArticulo));
+                builder.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (EliminaArticle()){
+                            Intent i = new Intent(getContext(), GenericDilog.class);
+                            i.putExtra("isOk", true);
+                            i.putExtra("message", getString(R.string.msjArticuloEliminadoOK));
+                            startActivity(i);
+                        }else{
+                            Toast.makeText(getContext(), getString(R.string.msjErrorActRegistro), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancelar", null);
+                builder.show();
+                break;
             default:
                 Toast.makeText(getContext(), "Opcion invalida", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
+
+        private boolean EliminaArticle() {
+            final ContentResolver resolver = getContext().getContentResolver();
+            String where = "article_code =?";
+            String[] idS = new String[]{mParam1};
+            int ArticulosEliminados  = resolver.delete(TiendaFacilContract.article.CONTENT_URI, where, idS);
+            if(ArticulosEliminados>0){
+                ArticleEliminado = true;
+                Log.d(TAG, "Registro se elimino correctamente");
+            }
+
+            return ArticleEliminado;
+
+        }
 
         private void editArticle() {
 
@@ -192,6 +270,7 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
                 values.put(article.ARTICLE_PRECIO, txtPrecio.getText().toString());
                 values.put(article.ARTICLE_COSTO, txtCosto.getText().toString());
                 values.put(article.ARTICLE_STOCK, txtUnidades.getText().toString());
+                values.put(article.ARTICLE_MARCA_ID, txtMarca.getText().toString());
                 values.put(article.ARTICLE_FOTO, ImgProductoByte);
 
                 String selection = "article_code = ?";

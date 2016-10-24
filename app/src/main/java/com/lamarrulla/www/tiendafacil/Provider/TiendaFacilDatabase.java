@@ -20,7 +20,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "TiendaFacilDB";
 
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 16;
 
     static SQLiteDatabase dbUse;
 
@@ -131,8 +131,6 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
                 .append(TipoDato.TEXT_)
                 .append(ArticleColumns.ARTICLE_DESC)
                 .append(TipoDato.TEXT_)
-                .append(ArticleColumns.ARTICLE_MARCA_ID)
-                .append(TipoDato.INT_)
                 .append(ArticleColumns.ARTICLE_PRECIO)
                 .append(TipoDato.DOUBLE_)
                 .append(ArticleColumns.ARTICLE_COSTO)
@@ -140,7 +138,10 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
                 .append(ArticleColumns.ARTICLE_FOTO)
                 .append(TipoDato.BLOB_)
                 .append(ArticleColumns.ARTICLE_STOCK)
-                .append(TipoDato.TEXT)
+                .append(TipoDato.TEXT_)
+                .append(ArticleColumns.ARTICLE_MARCA_ID)
+                .append(TipoDato.INT)
+                .append(" NOT NULL, FOREIGN KEY(article_marca_id) REFERENCES marca(marca_id)")
                 .append(")");
 
         db.execSQL(strBuilder.toString());
@@ -187,6 +188,12 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
 
         db.execSQL(strBuilder.toString());
         strBuilder.setLength(0);
+
+        strBuilder.append("PRAGMA foreign_keys = ON;");
+
+        db.execSQL(strBuilder.toString());
+        strBuilder.setLength(0);
+
     }
 
     interface Tables{

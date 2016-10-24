@@ -24,6 +24,11 @@
     <string name="msjRegistroIns">El registro se inserto correctamente con el id: </string>
     <string name="msjRegistroElim">Se eliminaron %1$s registros</string>
     <string name="msjRegistroAct">Se actualizaron %1$s registros</string>
+    <string name="msjErrorActRegistro">Ocurrio un error al eliminar el registro</string>
+    <string name="msjArticuloEliminadoOK">El articulo se elimino correctamente</string>
+    <string name="msjDeseasElimArticulo">Desea eliminar el articulo?</string>
+    <string name="msjEliminarArticulo">Elimina Articulo</string>
+
 
 
     <string name="title_activity_login">Sign in</string>
@@ -44,6 +49,7 @@
 
     <string name="accept">ACEPTAR</string>
     <string name="edit">ACTUALIZA</string>
+    <string name="eliminar">ELIMINAR</string>
 
     <string name="total_">Total:</string>
     <string name="no_articulos_">Numero de articulos:</string>

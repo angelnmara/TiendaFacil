@@ -34,7 +34,7 @@ public class MyArticulosRVA extends RecyclerView.Adapter<MyArticulosRVA.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_articulos, parent, false);
+                .inflate(R.layout.fragment_list_articulos, parent, false);
         return new ViewHolder(view);
     }
 
@@ -43,6 +43,7 @@ public class MyArticulosRVA extends RecyclerView.Adapter<MyArticulosRVA.ViewHold
         //holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getArticle_id().toString());
         holder.mContentView.setText(mValues.get(position).getArticle_desc());
+        holder.txtMarcaId.setText(String.valueOf(mValues.get(position).getArticle_marca_id()));
         byte[] btm = mValues.get(position).getArticle_foto();
         if (btm != null){
             Bitmap bitmap = BitmapFactory.decodeByteArray(btm, 0, btm.length);
@@ -75,6 +76,7 @@ public class MyArticulosRVA extends RecyclerView.Adapter<MyArticulosRVA.ViewHold
         public final TextView mIdView;
         public final TextView mContentView;
         public final ImageView ImgArticulos;
+        public final TextView txtMarcaId;
         //public DummyItem mItem;
 
         public ViewHolder(View view) {
@@ -83,6 +85,7 @@ public class MyArticulosRVA extends RecyclerView.Adapter<MyArticulosRVA.ViewHold
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
             ImgArticulos = (ImageView) view.findViewById(R.id.ImgArticulos);
+            txtMarcaId = (TextView) view.findViewById(R.id.txtMarcaId);
         }
 
         @Override

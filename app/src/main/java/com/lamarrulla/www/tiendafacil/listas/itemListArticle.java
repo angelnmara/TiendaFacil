@@ -14,8 +14,9 @@ public class itemListArticle {
     Double article_costo;
     byte[] article_foto;
     Integer article_stock;
+    Integer article_marca_id;
 
-    public itemListArticle(Integer article_id, String article_name, String article_desc, Double article_precio, Double article_costo, byte[] article_foto, Integer article_stock){
+    public itemListArticle(Integer article_id, String article_name, String article_desc, Double article_precio, Double article_costo, byte[] article_foto, Integer article_stock, Integer article_marca_id){
         this.article_id = article_id;
         this.article_name = article_name;
         this.article_desc = article_desc;
@@ -23,6 +24,15 @@ public class itemListArticle {
         this.article_costo = article_costo;
         this.article_foto = article_foto;
         this.article_stock = article_stock;
+        this.article_marca_id = article_marca_id;
+    }
+
+    public Integer getArticle_marca_id() {
+        return article_marca_id;
+    }
+
+    public void setArticle_marca_id(Integer article_marca_id) {
+        this.article_marca_id = article_marca_id;
     }
 
     public Integer getArticle_id() {
