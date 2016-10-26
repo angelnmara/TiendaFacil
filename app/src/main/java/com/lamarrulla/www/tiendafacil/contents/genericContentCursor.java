@@ -4,6 +4,8 @@ import android.database.Cursor;
 
 import com.lamarrulla.www.tiendafacil.listas.itemListArticle;
 import com.lamarrulla.www.tiendafacil.listas.itemListMarca;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.ArticleColumns;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.MarcaColumns;
 
 import java.util.ArrayList;
 
@@ -22,20 +24,20 @@ public class genericContentCursor {
             do{
                 switch (lista){
                     case "itemListArticle":
-                        Item.add(new itemListArticle(cursor.getInt(cursor.getColumnIndex("article_id")),
-                                cursor.getString(cursor.getColumnIndex("article_name")),
-                                cursor.getString(cursor.getColumnIndex("article_desc")),
-                                cursor.getDouble(cursor.getColumnIndex("article_precio")),
-                                cursor.getDouble(cursor.getColumnIndex("article_costo")),
-                                cursor.getBlob(cursor.getColumnIndex("article_foto")),
-                                cursor.getInt(cursor.getColumnIndex("article_stock")),
-                                cursor.getInt(cursor.getColumnIndex("article_marca_id"))));
+                        Item.add(new itemListArticle(cursor.getInt(cursor.getColumnIndex(ArticleColumns._ID)),
+                                cursor.getString(cursor.getColumnIndex(ArticleColumns.ARTICLE_NAME)),
+                                cursor.getString(cursor.getColumnIndex(ArticleColumns.ARTICLE_DESC)),
+                                cursor.getDouble(cursor.getColumnIndex(ArticleColumns.ARTICLE_PRECIO)),
+                                cursor.getDouble(cursor.getColumnIndex(ArticleColumns.ARTICLE_COSTO)),
+                                cursor.getBlob(cursor.getColumnIndex(ArticleColumns.ARTICLE_FOTO)),
+                                cursor.getInt(cursor.getColumnIndex(ArticleColumns.ARTICLE_COSTO)),
+                                cursor.getInt(cursor.getColumnIndex(ArticleColumns.ARTICLE_MARCA_ID))));
                         break;
                     case"itemListMarca":
-                        Item.add(new itemListMarca(cursor.getInt(cursor.getColumnIndex("marca_id")),
-                                cursor.getString(cursor.getColumnIndex("marca_code")),
-                                cursor.getString(cursor.getColumnIndex("marca_name")),
-                                cursor.getBlob(cursor.getColumnIndex("marca_imagen"))));
+                        Item.add(new itemListMarca(cursor.getInt(cursor.getColumnIndex(MarcaColumns._ID)),
+                                cursor.getString(cursor.getColumnIndex(MarcaColumns.MARCA_CODE)),
+                                cursor.getString(cursor.getColumnIndex(MarcaColumns.MARCA_NAME)),
+                                cursor.getBlob(cursor.getColumnIndex(MarcaColumns.MARCA_IMAGEN))));
                         break;
                     default:
                         break;

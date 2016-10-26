@@ -28,6 +28,7 @@ import com.lamarrulla.www.tiendafacil.contents.genericContentCursor;
 import com.lamarrulla.www.tiendafacil.dialogs.GenericDilog;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.marca;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.MarcaColumns;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,7 +38,7 @@ import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.marca;
  * Use the {@link AltaMarcaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AltaMarcaFragment extends Fragment implements View.OnClickListener, MyMarcasRVA.OnListFragmentMarca {
+public class AltaMarcaFragment extends Fragment implements View.OnClickListener, MyMarcasRVA.OnListFragmentMarca, MarcaColumns {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -128,7 +129,7 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
         list.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         list.setLayoutManager(mLayoutManager);
-        String[] projection = new String[] { "marca_id", "marca_code", "marca_name", "marca_imagen" };
+        String[] projection = new String[] { MarcaColumns._ID, MarcaColumns.MARCA_CODE, MarcaColumns.MARCA_NAME, MarcaColumns.MARCA_IMAGEN };
         Cursor MarcaCursor =  getContext().getContentResolver().query(TiendaFacilContract.marca.CONTENT_URI, projection, null, null, null);
         genericContentCursor.getData(MarcaCursor, "itemListMarca");
         AdapterMarca = new MyMarcasRVA(genericContentCursor.Item, AltaMarcaFragment.this);
@@ -167,8 +168,8 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
 
             /*inserta*/
 
-            values.put(marca.MARCA_NAME, txtMarca.getText().toString());
-            values.put(marca.MARCA_CODE, txtCodigo.getText().toString());
+            values.put(MarcaColumns.MARCA_NAME, txtMarca.getText().toString());
+            values.put(MarcaColumns.MARCA_CODE, txtCodigo.getText().toString());
             final Uri newUri = resolver.insert(marca.CONTENT_URI, values);
             Intent i = new Intent(getContext(), GenericDilog.class);
             String marca = TiendaFacilContract.article.getArticleId(newUri).toString();
@@ -208,10 +209,10 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
         final ContentResolver resolver = getContext().getContentResolver();
         final ContentValues values = new ContentValues();
 
-        values.put(marca.MARCA_NAME, txtMarca.getText().toString());
-        values.put(marca.MARCA_CODE, txtCodigo.getText().toString());
+        values.put(MarcaColumns.MARCA_NAME, txtMarca.getText().toString());
+        values.put(MarcaColumns.MARCA_CODE, txtCodigo.getText().toString());
 
-        String selection = "marca_id =?";
+        String selection = "_id =?";
         String[] selectionArgs = new String[] {String.valueOf(id)};
 
         Integer actualizados = resolver.update(marca.CONTENT_URI, values, selection, selectionArgs);
@@ -231,7 +232,7 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
     private void deleteMarca(String id) {
         Log.d(TAG, "Elimina marca");
         final ContentResolver resolver = getContext().getContentResolver();
-        String where = "marca_id =?";
+        String where = "_id =?";
         String[] idS = new String[]{id};
         int ArticulosEliminados  = resolver.delete(marca.CONTENT_URI, where, idS);
 
@@ -252,17 +253,17 @@ public class AltaMarcaFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onListEdit(int id) {
-        String[] projection = new String[] { "marca_id", "marca_code", "marca_name", "marca_imagen" };
-        String where = "marca_id =?";
+        String[] projection = new String[] { MarcaColumns._ID, MarcaColumns.MARCA_CODE, MarcaColumns.MARCA_NAME, MarcaColumns.MARCA_IMAGEN };
+        String where = MarcaColumns._ID + "=?";
         String[] vals = new String[]{String.valueOf(id)};
         Cursor MarcaCursor =  getContext().getContentResolver().query(TiendaFacilContract.marca.CONTENT_URI, projection, where, vals, null);
 
         if(MarcaCursor.moveToFirst()){
             do{
-                MarcaEdit = MarcaCursor.getString(MarcaCursor.getColumnIndex("marca_name"));
-                MarcaEditId = MarcaCursor.getInt(MarcaCursor.getColumnIndex("marca_id"));
+                MarcaEdit = MarcaCursor.getString(MarcaCursor.getColumnIndex(MarcaColumns.MARCA_NAME));
+                MarcaEditId = MarcaCursor.getInt(MarcaCursor.getColumnIndex(MarcaColumns._ID));
                 txtMarca.setText(MarcaEdit);
-                txtCodigo.setText(MarcaCursor.getString(MarcaCursor.getColumnIndex("marca_code")));
+                txtCodigo.setText(MarcaCursor.getString(MarcaCursor.getColumnIndex(MarcaColumns.MARCA_CODE)));
             }while (MarcaCursor.moveToNext());
         }
         edit = true;

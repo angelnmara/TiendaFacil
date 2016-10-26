@@ -207,7 +207,7 @@ public class TiendaFragment extends Fragment implements View.OnClickListener, My
     }
 
     private void llenalista() {
-        String[] projectionVenta = new String[] { "venta_name", "venta_desc", "venta_precio", "venta_foto, venta_marca_id"};
+        String[] projectionVenta = new String[] { "venta._id", venta.VENTA_NAME, venta.VENTA_DESC, venta.VENTA_PRECIO, venta.VENTA_FOTO, venta.VENTA_MARCA_ID};
         Cursor ventaCursor = getContext().getContentResolver().query(venta_marca.CONTENT_URI, projectionVenta, null, null, null);
         if(ventaCursor.getCount()>0){
             Item = new ArrayList();

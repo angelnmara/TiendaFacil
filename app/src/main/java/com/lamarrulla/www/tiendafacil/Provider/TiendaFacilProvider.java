@@ -144,7 +144,7 @@ public class TiendaFacilProvider extends ContentProvider {
                 break;
 
             case CODE_ALL_VENTA_MARCA:
-                queryBuilder.setTables("venta inner join marca on venta.venta_marca_id = marca.marca_id");
+                queryBuilder.setTables("venta inner join marca on venta.venta_marca_id = marca._id");
                 break;
 
             case CODE_SINGLE_VENTA_MARCA:

@@ -31,18 +31,19 @@
         <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
                                                        android:id="@+id/textinputMarca">
-            <!--<EditText android:hint="Marca"
-                      android:id="@+id/txtMarca"
-                      android:layout_width="match_parent"
-                      android:maxLines="1"
-                      android:maxLength="100"
-                      android:layout_height="wrap_content"/>-->
+
             <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner android:layout_width="match_parent"
                                                                                 android:layout_height="wrap_content"
                                                                                 android:hint="Marca"
                                                                                 android:id="@+id/ddlMarca">
 
             </com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner>
+
+            <!--<android.support.v7.widget.AppCompatSpinner android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:id="@+id/ddlMarca">
+
+            </android.support.v7.widget.AppCompatSpinner>-->
 
         </android.support.design.widget.TextInputLayout>
 

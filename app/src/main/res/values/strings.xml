@@ -54,5 +54,11 @@
     <string name="total_">Total:</string>
     <string name="no_articulos_">Numero de articulos:</string>
 
+    <string-array name="statusfails">
+        <!--<item>PENDIENTE</item>-->
+        <item>Resuelto</item>
+        <item>Reparado</item>
+    </string-array>
+
 
 </resources>

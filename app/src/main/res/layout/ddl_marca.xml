@@ -5,9 +5,18 @@
               android:layout_height="match_parent">
 
     <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content" android:text="MarcaId" android:id="@+id/txtMarcaId" android:visibility="gone"/>
+              android:layout_height="wrap_content"
+              android:text="MarcaId"
+              android:id="@+id/txtMarcaId"
+              android:visibility="gone"
+    />
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Marca"
-              android:id="@+id/txtMarca"/>
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Marca"
+              android:id="@+id/txtMarca"
+              android:ellipsize="marquee"
+              android:layout_margin="5dp"
+            android:textSize="18sp"/>
 
 </LinearLayout>

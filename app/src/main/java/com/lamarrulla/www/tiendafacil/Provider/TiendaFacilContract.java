@@ -79,8 +79,8 @@ public final class TiendaFacilContract {
 
     }
 
-    interface ArticleColumns extends BaseColumns{
-        public static final String ARTICLE_ID = "article_id";
+    public interface ArticleColumns extends BaseColumns{
+        /*public static final String ARTICLE_ID = "article_id";*/
         public static final String ARTICLE_CODE = "article_code";
         public static final String ARTICLE_NAME = "article_name";
         public static final String ARTICLE_DESC = "article_desc";
@@ -91,8 +91,8 @@ public final class TiendaFacilContract {
         public static final String ARTICLE_STOCK = "article_stock";
     }
 
-    interface MarcaColumns extends BaseColumns{
-        public static final String MARCA_ID = "marca_id";
+    public interface MarcaColumns extends BaseColumns{
+        /*public static final String MARCA_ID = "marca_id";*/
         public static final String MARCA_NAME = "marca_name";
         public static final String MARCA_CODE = "marca_code";
         public static final String MARCA_IMAGEN = "marca_imagen";
@@ -100,7 +100,7 @@ public final class TiendaFacilContract {
         public static final String MARCA_OTRO2 = "marca_otro2";
     }
 
-    interface VentaColumns extends BaseColumns{
+    public interface VentaColumns extends BaseColumns{
         public static final String VENTA_ID = "venta_id";
         public static final String VENTA_CODE = "venta_code";
         public static final String VENTA_NAME = "venta_name";
@@ -144,7 +144,7 @@ public final class TiendaFacilContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_USER).build();
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.USER;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.USER;
-        public static final String DEFAULT_SORT = UserColumns._ID + " COLLATE NOCASE ASC";
+        public static final String DEFAULT_SORT = UserColumns.NAME + " COLLATE NOCASE ASC";
 
         public static Uri buildUserUri(String UserId){
             return CONTENT_URI.buildUpon().appendPath(_ID).build();
@@ -160,10 +160,10 @@ public final class TiendaFacilContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_VENTA).build();
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.VENTA;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.VENTA;
-        public static final String DEFAULT_SORT = VentaColumns.VENTA_ID + " COLLATE NOCASE ASC";
+        public static final String DEFAULT_SORT = VentaColumns.VENTA_NAME + " COLLATE NOCASE ASC";
 
         public static Uri buildVentaUri(String VentaId){
-            return CONTENT_URI.buildUpon().appendPath(VENTA_ID).build();
+            return CONTENT_URI.buildUpon().appendPath(_ID).build();
         }
 
         public static String getVentaId(Uri uri){
@@ -176,10 +176,10 @@ public final class TiendaFacilContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MARCA).build();
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.MARCA;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.MARCA;
-        public static final String DEFAULT_SORT = MarcaColumns.MARCA_ID + " COLLATE NOCASE ASC";
+        public static final String DEFAULT_SORT = MarcaColumns.MARCA_NAME + " COLLATE NOCASE ASC";
 
         public static Uri buildMarcaUri(String VentaId){
-            return CONTENT_URI.buildUpon().appendPath(MARCA_ID).build();
+            return CONTENT_URI.buildUpon().appendPath(_ID).build();
         }
 
         public static String getMarcaId(Uri uri){
@@ -191,10 +191,10 @@ public final class TiendaFacilContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_VENTA_MARCA).build();
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.VENTA_MARCA;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.VENTA_MARCA;
-        public static final String DEFAULT_SORT = VentaMarcaColumns.MARCA_ID + " COLLATE NOCASE ASC";
+        public static final String DEFAULT_SORT = VentaMarcaColumns.VENTA_NAME + " COLLATE NOCASE ASC";
 
         public static Uri buildMarcaUri(String VentaId){
-            return CONTENT_URI.buildUpon().appendPath(MARCA_ID).build();
+            return CONTENT_URI.buildUpon().appendPath(_ID).build();
         }
 
         public static String getMarcaId(Uri uri){
@@ -206,10 +206,10 @@ public final class TiendaFacilContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_ARTICLE).build();
         public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.ARTICLE;
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vdn." + CONTENT_AUTHORITY + "." + Tables.ARTICLE;
-        public static final String DEFAULT_SORT = ArticleColumns.ARTICLE_ID + " COLLATE NOCASE ASC";
+        public static final String DEFAULT_SORT = ArticleColumns.ARTICLE_NAME + " COLLATE NOCASE ASC";
 
         public static Uri buildArticleUri(String ArticleId){
-            return CONTENT_URI.buildUpon().appendPath(ARTICLE_ID).build();
+            return CONTENT_URI.buildUpon().appendPath(_ID).build();
         }
 
         public static String getArticleId(Uri uri){

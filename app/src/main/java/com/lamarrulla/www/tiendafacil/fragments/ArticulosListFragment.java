@@ -16,6 +16,9 @@ import com.lamarrulla.www.tiendafacil.R;
 import com.lamarrulla.www.tiendafacil.adapters.MyArticulosRVA;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 import com.lamarrulla.www.tiendafacil.contents.genericContentCursor;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.article;
+
+import com.lamarrulla.www.tiendafacil.cursores.allCursors;
 
 /**
  * A fragment representing a list of Items.
@@ -71,10 +74,23 @@ public class ArticulosListFragment extends Fragment implements MyArticulosRVA.On
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio", "article_costo", "article_foto", "article_stock", "article_marca_id" };
-            Cursor ArticulosCursor =  getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, null, null, null);
-            //genericContentJSON.getData();
-            genericContentCursor.getData(ArticulosCursor, "itemListArticle");
+
+            /*String[] projection = new String[] { article._ID,
+                    article.ARTICLE_NAME,
+                    article.ARTICLE_DESC,
+                    article.ARTICLE_PRECIO,
+                    article.ARTICLE_COSTO,
+                    article.ARTICLE_FOTO,
+                    article.ARTICLE_STOCK,
+                    article.ARTICLE_MARCA_ID };
+
+            Cursor ArticulosCursor =  getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, null, null, null);*/
+
+            allCursors cur = new allCursors();
+            cur.getCursorArticles(getContext());
+
+            genericContentCursor.getData(cur.getCursor(), "itemListArticle");
+
             if (genericContentCursor.Item != null){
                 recyclerView.setAdapter(new MyArticulosRVA(genericContentCursor.Item, ArticulosListFragment.this));
             }

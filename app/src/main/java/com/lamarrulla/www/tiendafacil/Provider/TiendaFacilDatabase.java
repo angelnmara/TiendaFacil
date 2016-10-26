@@ -20,7 +20,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "TiendaFacilDB";
 
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 19;
 
     static SQLiteDatabase dbUse;
 
@@ -123,7 +123,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
 
         strBuilder.append("CREATE TABLE IF NOT EXISTS ")
                 .append(Tables.ARTICLE).append("(")
-                .append(ArticleColumns.ARTICLE_ID)
+                .append(ArticleColumns._ID)
                 .append(TipoDato.INT_KEY)
                 .append(ArticleColumns.ARTICLE_CODE)
                 .append(TipoDato.TEXT_)
@@ -141,7 +141,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
                 .append(TipoDato.TEXT_)
                 .append(ArticleColumns.ARTICLE_MARCA_ID)
                 .append(TipoDato.INT)
-                .append(" NOT NULL, FOREIGN KEY(article_marca_id) REFERENCES marca(marca_id)")
+                .append(" NOT NULL, FOREIGN KEY(article_marca_id) REFERENCES marca(_id)")
                 .append(")");
 
         db.execSQL(strBuilder.toString());
@@ -150,7 +150,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
         strBuilder.append(TipoDato.CREATE_TABLE)
                 .append(Tables.MARCA)
                 .append("(")
-                .append(MarcaColumns.MARCA_ID)
+                .append(MarcaColumns._ID)
                 .append(TipoDato.INT_KEY)
                 .append(MarcaColumns.MARCA_CODE)
                 .append(TipoDato.TEXT_)
@@ -170,7 +170,7 @@ public class TiendaFacilDatabase extends SQLiteOpenHelper {
         strBuilder.append(TipoDato.CREATE_TABLE)
                 .append(Tables.VENTA)
                 .append("(")
-                .append(VentaColumns.VENTA_ID)
+                .append(VentaColumns._ID)
                 .append(TipoDato.INT_KEY)
                 .append(VentaColumns.VENTA_CODE)
                 .append(TipoDato.TEXT_)

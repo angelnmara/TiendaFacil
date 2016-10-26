@@ -23,22 +23,27 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lamarrulla.www.tiendafacil.MainActivity;
 import com.lamarrulla.www.tiendafacil.R;
 import com.lamarrulla.www.tiendafacil.dialogs.GenericDilog;
+import com.lamarrulla.www.tiendafacil.listas.itemListDDL;
 import com.lamarrulla.www.tiendafacil.listas.itemListMarca;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.article;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.ArticleColumns;
+import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.marca;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
 import org.w3c.dom.Text;
 
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.List;
 
     /**
  * A simple {@link Fragment} subclass.
@@ -151,9 +156,17 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(getContext(),
                 R.layout.ddl_marca,
                 getAllMarcas(),
-                new String[]{"marca_id", "marca_name"},
+                new String[]{marca._ID, marca.MARCA_NAME},
                 new int[]{R.id.txtMarcaId, R.id.txtMarca});
 
+        /*ArrayList<itemListDDL> item = new ArrayList();
+
+        item.add(new itemListDDL(1, "hola"));
+        item.add(new itemListDDL(2, "adios"));
+
+        ArrayAdapter<itemListDDL> adapter = new ArrayAdapter<itemListDDL> (getContext(), android.R.layout.simple_spinner_dropdown_item, item);*/
+
+        adapter.setDropDownViewResource(R.layout.ddl_marca);
         ddlMarca.setAdapter(adapter);
 
         fillarticulosCursor();
@@ -170,14 +183,14 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
     }
 
         private Cursor getAllMarcas() {
-            String[] projection = new String[] { "marca_id", "marca_name"};
+            String[] projection = new String[] { marca._ID, marca.MARCA_NAME};
             Cursor cursor = getContext().getContentResolver().query(TiendaFacilContract.marca.CONTENT_URI, projection, null, null, null);
             return cursor;
         }
 
         private void fillarticulosCursor() {
-            String[] projection = new String[] { "article_id", "article_name", "article_desc", "article_precio, article_costo, article_foto, article_stock, article_marca_id" };
-            String selection = "article_code = ?";
+            String[] projection = new String[] { "_id", ArticleColumns.ARTICLE_NAME, ArticleColumns.ARTICLE_DESC, ArticleColumns.ARTICLE_PRECIO, ArticleColumns.ARTICLE_COSTO, ArticleColumns.ARTICLE_FOTO, ArticleColumns.ARTICLE_STOCK, ArticleColumns.ARTICLE_MARCA_ID };
+            String selection = article.ARTICLE_CODE + " = ?";
             String[] selectionArgs = new String[] {mParam1};
             articulosCursor = getContext().getContentResolver().query(TiendaFacilContract.article.CONTENT_URI, projection, selection, selectionArgs, null);
         }
@@ -185,13 +198,13 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         private void llenaPantalla(Cursor articulosCursor) {
         if(articulosCursor.moveToFirst()){
             do{
-                txtNombre.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_name")));
-                txtUnidades.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_stock")));
-                txtCosto.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_costo")));
-                txtDescripcion.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_desc")));
-                txtPrecio.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_precio")));
-                txtMarca.setText(articulosCursor.getString(articulosCursor.getColumnIndex("article_marca_id")));
-                byte[] btm = articulosCursor.getBlob(articulosCursor.getColumnIndex("article_foto"));
+                txtNombre.setText(articulosCursor.getString(articulosCursor.getColumnIndex(ArticleColumns.ARTICLE_NAME)));
+                txtUnidades.setText(articulosCursor.getString(articulosCursor.getColumnIndex(ArticleColumns.ARTICLE_STOCK)));
+                txtCosto.setText(articulosCursor.getString(articulosCursor.getColumnIndex(ArticleColumns.ARTICLE_COSTO)));
+                txtDescripcion.setText(articulosCursor.getString(articulosCursor.getColumnIndex(ArticleColumns.ARTICLE_DESC)));
+                txtPrecio.setText(articulosCursor.getString(articulosCursor.getColumnIndex(ArticleColumns.ARTICLE_PRECIO)));
+                txtMarca.setText(articulosCursor.getString(articulosCursor.getColumnIndex(ArticleColumns.ARTICLE_MARCA_ID)));
+                byte[] btm = articulosCursor.getBlob(articulosCursor.getColumnIndex(ArticleColumns.ARTICLE_FOTO));
                 if (btm != null){
                     Bitmap bitmap = BitmapFactory.decodeByteArray(btm, 0, btm.length);
                     ImgProducto.setImageBitmap(bitmap);
@@ -247,7 +260,7 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
 
         private boolean EliminaArticle() {
             final ContentResolver resolver = getContext().getContentResolver();
-            String where = "article_code =?";
+            String where = article.ARTICLE_CODE + "=?";
             String[] idS = new String[]{mParam1};
             int ArticulosEliminados  = resolver.delete(TiendaFacilContract.article.CONTENT_URI, where, idS);
             if(ArticulosEliminados>0){
@@ -265,15 +278,15 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
                 final ContentResolver resolver = getContext().getContentResolver();
                 final ContentValues values = new ContentValues();
 
-                values.put(article.ARTICLE_DESC, txtDescripcion.getText().toString());
-                values.put(article.ARTICLE_NAME, txtNombre.getText().toString());
-                values.put(article.ARTICLE_PRECIO, txtPrecio.getText().toString());
-                values.put(article.ARTICLE_COSTO, txtCosto.getText().toString());
-                values.put(article.ARTICLE_STOCK, txtUnidades.getText().toString());
-                values.put(article.ARTICLE_MARCA_ID, txtMarca.getText().toString());
-                values.put(article.ARTICLE_FOTO, ImgProductoByte);
+                values.put(ArticleColumns.ARTICLE_DESC, txtDescripcion.getText().toString());
+                values.put(ArticleColumns.ARTICLE_NAME, txtNombre.getText().toString());
+                values.put(ArticleColumns.ARTICLE_PRECIO, txtPrecio.getText().toString());
+                values.put(ArticleColumns.ARTICLE_COSTO, txtCosto.getText().toString());
+                values.put(ArticleColumns.ARTICLE_STOCK, txtUnidades.getText().toString());
+                values.put(ArticleColumns.ARTICLE_MARCA_ID, txtMarca.getText().toString());
+                values.put(ArticleColumns.ARTICLE_FOTO, ImgProductoByte);
 
-                String selection = "article_code = ?";
+                String selection =  ArticleColumns.ARTICLE_CODE + "= ?";
                 String[] selectionArgs = new String[] {mParam1};
 
                 Integer actualizados = resolver.update(TiendaFacilContract.article.CONTENT_URI, values, selection, selectionArgs);
@@ -302,14 +315,14 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
             final ContentResolver resolver = getContext().getContentResolver();
             final ContentValues values = new ContentValues();
 
-            values.put(article.ARTICLE_CODE, mParam1);
-            values.put(article.ARTICLE_DESC, txtDescripcion.getText().toString());
-            values.put(article.ARTICLE_MARCA_ID, txtMarca.getText().toString());
-            values.put(article.ARTICLE_NAME, txtNombre.getText().toString());
-            values.put(article.ARTICLE_PRECIO, txtPrecio.getText().toString());
-            values.put(article.ARTICLE_COSTO, txtCosto.getText().toString());
-            values.put(article.ARTICLE_STOCK, txtUnidades.getText().toString());
-            values.put(article.ARTICLE_FOTO, ImgProductoByte);
+            values.put(ArticleColumns.ARTICLE_CODE, mParam1);
+            values.put(ArticleColumns.ARTICLE_DESC, txtDescripcion.getText().toString());
+            values.put(ArticleColumns.ARTICLE_MARCA_ID, txtMarca.getText().toString());
+            values.put(ArticleColumns.ARTICLE_NAME, txtNombre.getText().toString());
+            values.put(ArticleColumns.ARTICLE_PRECIO, txtPrecio.getText().toString());
+            values.put(ArticleColumns.ARTICLE_COSTO, txtCosto.getText().toString());
+            values.put(ArticleColumns.ARTICLE_STOCK, txtUnidades.getText().toString());
+            values.put(ArticleColumns.ARTICLE_FOTO, ImgProductoByte);
 
             final Uri newUri = resolver.insert(TiendaFacilContract.article.CONTENT_URI, values);
 
