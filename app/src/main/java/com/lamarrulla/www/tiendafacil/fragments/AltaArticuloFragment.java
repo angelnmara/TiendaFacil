@@ -37,7 +37,10 @@ import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.article;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.ArticleColumns;
 import com.lamarrulla.www.tiendafacil.provider.TiendaFacilContract.marca;
+import com.lamarrulla.www.tiendafacil.utils.ClickToSelectEditText;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+
+import com.lamarrulla.www.tiendafacil.adapters.AdapterDDLMarca;
 
 import org.w3c.dom.Text;
 
@@ -79,8 +82,8 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
     private EditText txtCosto;
     private EditText txtUnidades;
     private EditText txtMarca;
-        private MaterialBetterSpinner ddlMarca;
 
+        private EditText ddlMarca;
 
         private boolean ArticleEliminado = false;
 
@@ -92,7 +95,11 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
 
         private Cursor articulosCursor;
 
+
     //private OnFragmentInteractionListener mListener;
+
+
+        ClickToSelectEditText<itemListDDL> ddl;
 
     public AltaArticuloFragment() {
         // Required empty public constructor
@@ -139,7 +146,11 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         txtUnidades = (EditText) v.findViewById(R.id.txtUnidades);
 
         txtMarca = (EditText) v.findViewById(R.id.txtMarca);
-        ddlMarca = (MaterialBetterSpinner) v.findViewById(R.id.ddlMarca);
+        //ddlMarca = (Spinner) v.findViewById(R.id.ddlMarca);
+
+        //@InjectView(R.id.signup_text_input_job_category)
+
+                ddlMarca = v.findViewById(R.id.email_sign_in_button);
 
         txtBtnAcept = (TextView) v.findViewById(R.id.txtBtnAcept);
         btn_eliminar = (CardView) v.findViewById(R.id.btn_eliminar);
@@ -153,21 +164,21 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         MainActivity.fab.setImageResource(R.drawable.ic_menu_camera);
         ImgProducto.setOnClickListener(this);
 
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(getContext(),
+        /*SimpleCursorAdapter adapter = new SimpleCursorAdapter(getContext(),
                 R.layout.ddl_marca,
                 getAllMarcas(),
                 new String[]{marca._ID, marca.MARCA_NAME},
-                new int[]{R.id.txtMarcaId, R.id.txtMarca});
+                new int[]{R.id.txtMarcaId, R.id.txtMarca});*/
 
         /*ArrayList<itemListDDL> item = new ArrayList();
 
         item.add(new itemListDDL(1, "hola"));
-        item.add(new itemListDDL(2, "adios"));
+        item.add(new itemListDDL(2, "adios"));*/
 
-        ArrayAdapter<itemListDDL> adapter = new ArrayAdapter<itemListDDL> (getContext(), android.R.layout.simple_spinner_dropdown_item, item);*/
+        /*ArrayAdapter<itemListMarca> adapter = new AdapterDDLMarca(getContext(), 0);*/
 
-        adapter.setDropDownViewResource(R.layout.ddl_marca);
-        ddlMarca.setAdapter(adapter);
+        /*adapter.setDropDownViewResource(R.layout.ddl_marca);
+        ddlMarca.setAdapter(adapter);*/
 
         fillarticulosCursor();
 
@@ -177,6 +188,19 @@ public class AltaArticuloFragment extends Fragment implements View.OnClickListen
         }
 
         txtCodigo.setText(mParam1);
+
+        List<itemListDDL> ilm = new ArrayList<>();
+
+        ilm.add(new itemListDDL(1, ""));
+
+        ddl.setItems(ilm);
+        ddl.setOnItemSelectedListener(new ClickToSelectEditText.OnItemSelectedListener<itemListDDL>() {
+                                          @Override
+                                          public void onItemSelectedListener(itemListDDL item, int selectedIndex) {
+                                              selectedIndex = 1;
+                                          }
+                                      });
+
 
         // Inflate the layout for this fragment
         return v;
