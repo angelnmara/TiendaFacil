@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">TiendaFacil</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="buscar">Buscar</string>
+    <string name="alta">Alta</string>
+    <string name="edita">Edita</string>
+    <string name="total">Total</string>
+    <string name="limpiar">Limpiar</string>
+
+    <!--mensajes--> <!--Errores-->
+
+    <string name="MsjOpcionInvalida">Opcion invalida</string>
+    <string name="msjArticuloNoInsertado">El articulo no se inserto correctamente</string>
+    <string name="msjMarcaReq">La marca es requerida</string>
+    <string name="msjCodigoReq">El código es requerido</string>
+    <string name="msjRegistroIns">El registro se inserto correctamente con el id: </string>
+    <string name="msjRegistroElim">Se eliminaron %1$s registros</string>
+    <string name="msjRegistroAct">Se actualizaron %1$s registros</string>
+    <string name="msjErrorActRegistro">Ocurrio un error al eliminar el registro</string>
+    <string name="msjArticuloEliminadoOK">El articulo se elimino correctamente</string>
+    <string name="msjDeseasElimArticulo">Desea eliminar el articulo?</string>
+    <string name="msjEliminarArticulo">Elimina Articulo</string>
+
+
+
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+
+    <string name="accept">ACEPTAR</string>
+    <string name="edit">ACTUALIZA</string>
+    <string name="eliminar">ELIMINAR</string>
+
+    <string name="total_">Total:</string>
+    <string name="no_articulos_">Numero de articulos:</string>
+
+    <string-array name="statusfails">
+        <!--<item>PENDIENTE</item>-->
+        <item>Resuelto</item>
+        <item>Reparado</item>
+    </string-array>
+
+
+</resources>
